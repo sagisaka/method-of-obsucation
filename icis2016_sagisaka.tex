@@ -7,7 +7,6 @@
 \fi
 \hyphenation{op-tical net-works semi-conduc-tor}
 
-
 \begin{document}
 %
 % paper title
@@ -26,7 +25,7 @@
 \author{\IEEEauthorblockN{Hayato Sagisaka}
   \IEEEauthorblockA{Division of Frontier Informatics,\\
     Graduate School of Kyoto Sangyo University.\\
-    Email: g1244497@cse.kyoto-su.ac.jp}
+    Email: i1658065@cc.kyoto-su.ac.jp}
 \and
 \IEEEauthorblockN{Haruaki Tamada}
 \IEEEauthorblockA{
@@ -85,188 +84,157 @@
 % \IEEEpeerreviewmaketitle
 
 \section{Introduction}
-Recently, illegalities such as illegality access and analysis are increasing.
-Various methods of protection in software are proposed as a measure.
-Method of protection in software can guard from the injustice access and analysis by prevent the program in advance.
-There is a method of protection called obfuscation that is one of the method of protection in software.
-The obfuscation is method of protection so as not to analyze program.
+Recently, illegalities such as illegality access and analysis are
+increasing.  Various methods of protection in software are proposed as
+a measure.  Method of protection in software can guard from the
+injustice access and analysis by prevent the program in advance.
+There is a method of protection called obfuscation that is one of the
+method of protection in software.  The obfuscation is method of
+protection so as not to analyze program.
 %
-For example, name obfuscation that is to change unknown name of meaning into class name and method name and control flow of obfuscation that is to generate code that is not able to understand the meaning when de-compile is tried to do are proposed various methods how we falsify data so as not to analyze.
-There are the methods called de-obfuscation that is to return obfuscation program to original program.
-As de-obfuscation is taken by illegality access, the measure is need.
-We consider useful in analyzing for malware that is protecting obfuscation by doing research to de-obfuscation.
-So, we consider new measure for obfuscation and discussion about vulnerability of obfuscation.
-However, the research about de-obfuscation do not ever take for the present.
-For taking the de-obfuscation, it takes to identify the used obfuscation from various obfuscation and needs to make sure how to analyze.
-Then, in this paper, we analyze the obfuscated program and search the characteristic of method of obfuscation.
-In specific, we analyze the command of software ( jar file ) that is applied method of obfuscation, and get to estimation of creation in each n-gram of opcode as preliminary experiment.
-We compare their results and extract characteristic.
-After that, we inspect the efficiency for unknown product and unknown method of obfuscation from extracted characteristic as evaluation experiment.
-
-% no \IEEEPARstart
-%This demo file is intended to serve as a ``starter file''
-%for IEEE conference papers produced under \LaTeX\ using
-%IEEEtran.cls version 1.8b and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-
-%\hfill mds
- 
-%\hfill August 26, 2015
-
-%\subsection{Subsection Heading Here}
-%Subsection text here.
-
-
-%\subsubsection{Subsubsection Heading Here}
-%Subsubsection text here.
-
-
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex, 
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure}
-
-% Note that the IEEE typically puts floats only at the top, even when this
-% results in a large percentage of a column being occupied by floats.
-
-
-% An example of a double column floating figure using two subfigures.
-% (The subfig.sty package must be loaded for this to work.)
-% The subfigure \label commands are set within each subfloat command,
-% and the \label for the overall figure must come after \caption.
-% \hfil is used as a separator to get equal spacing.
-% Watch out that the combined width of all the subfigures on a 
-% line do not exceed the text width or a line break will occur.
-%
-%\begin{figure*}[!t]
-%\centering
-%\subfloat[Case I]{\includegraphics[width=2.5in]{box}%
-%\label{fig_first_case}}
-%\hfil
-%\subfloat[Case II]{\includegraphics[width=2.5in]{box}%
-%\label{fig_second_case}}
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure*}
-%
-% Note that often IEEE papers with subfigures do not employ subfigure
-% captions (using the optional argument to \subfloat[]), but instead will
-% reference/describe all of them (a), (b), etc., within the main caption.
-% Be aware that for subfig.sty to generate the (a), (b), etc., subfigure
-% labels, the optional argument to \subfloat must be present. If a
-% subcaption is not desired, just leave its contents blank,
-% e.g., \subfloat[].
-
-
-% An example of a floating table. Note that, for IEEE style tables, the
-% \caption command should come BEFORE the table and, given that table
-% captions serve much like titles, are usually capitalized except for words
-% such as a, an, and, as, at, but, by, for, in, nor, of, on, or, the, to
-% and up, which are usually not capitalized unless they are the first or
-% last word of the caption. Table text will default to \footnotesize as
-% the IEEE normally uses this smaller font for tables.
-% The \label must come after \caption as always.
-%
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
-
-
-% Note that the IEEE does not put floats in the very first column
-% - or typically anywhere on the first page for that matter. Also,
-% in-text middle ("here") positioning is typically not used, but it
-% is allowed and encouraged for Computer Society conferences (but
-% not Computer Society journals). Most IEEE journals/conferences use
-% top floats exclusively. 
-% Note that, LaTeX2e, unlike IEEE journals/conferences, places
-% footnotes above bottom floats. This can be corrected via the
-% \fnbelowfloat command of the stfloats package.
-
-
+For example, name obfuscation that is to change unknown name of
+meaning into class name and method name and control flow of
+obfuscation that is to generate code that is not able to understand
+the meaning when de-compile is tried to do are proposed various
+methods how we falsify data so as not to analyze.  There are the
+methods called de-obfuscation that is to return obfuscation program to
+original program.  As de-obfuscation is taken by illegality access,
+the measure is need.  We consider useful in analyzing for malware that
+is protecting obfuscation by doing research to de-obfuscation.  So, we
+consider new measure for obfuscation and discussion about
+vulnerability of obfuscation.  However, the research about
+de-obfuscation do not ever take for the present.  For taking the
+de-obfuscation, it takes to identify the used obfuscation from various
+obfuscation and needs to make sure how to analyze.  Then, in this
+paper, we analyze the obfuscated program and search the characteristic
+of method of obfuscation.  In specific, we analyze the command of
+software ( jar file ) that is applied method of obfuscation, and get
+to estimation of creation in each n-gram of opcode as preliminary
+experiment.  We compare their results and extract characteristic.
+After that, we inspect the efficiency for unknown product and unknown
+method of obfuscation from extracted characteristic as evaluation
+experiment.
 
 \section{Related Work}
-Method of protection in software can separate methods into three technique groups that is (1) prevention of plagiarism, (2) detection of plagiarism, and (3) identification of plagiarism.\cite{collberg09surreptitious}
-(1) as obfuscation methods and anti-de-assemble methods\cite{tyma00patent,monden97ieice}, (2) as bath mark in software methods\cite{tamada05ieice},and (3) as watermark in software methods mainly researched\cite{collberg99popl}.
 
-Methods of attack are proposed for obfuscation with a factor technique of (1).
-One of them is de-change for name obfuscation that is to change the variable name and function name into programs for hard reading\cite{cimato05jss}.
-The other one is to classify method for using the abstract syntax tree for applied program with obfuscation method that is to complicate the control flow.
-Both methods are useful to establish as methods of attack.
-On the other hand, for specializing obfuscation, the method is not general.
-Established methods of attack that are bath mark that are a factor technique of (2) and (3) and watermark do not exist.
-However, base mark and watermark have common points that is to use the information in program.
-That is to say, as their methods are to change the information in reference program, these methods will become to the methods of attack.
-For that reason, obfuscation methods with a factor technique of (1) is used as methods of attack\cite{tian13hpcc}.
-On the other hand, the methods that is to evaluate unnatural from methods of protect as method of evaluation with obfuscations are proposed\cite{kanzaki14ipsj}.
-There is method that is to estimate unnatural from methods of protect by the probability of creations that is to abstract n-gram from opcode in programs.
-Kanzaki's method is to evaluate the artificial of degree between opcode that is applied by method of protection and opcode that is to do output by compiler.
+The previous protection methods are categorized into (1) preventing
+the theft techniques, (2) detecting stolen programs, and (3) proving
+the theft\cite{collberg09surreptitious}.
+%
+In category (1), there were proposed obfuscation methods, and
+anti-assemble methods\cite{tyma00patent,monden97ieice}.  Also,
+category (2) includes software birthmark
+methods\cite{tamada05ieice}, and category (3) includes software
+watermark methods\cite{collberg99popl}.
+
+An attack methods against obfuscation methods were proposed for
+category (1)\cite{cimato05jss}.
+%
+Cimato et al. proposed the conversion method to de-obfuscate the names
+in a program.
+%
+Hoge et al. also proposed the de-obfuscating the program to 
+clarify its control flow with abstract syntax tree.
+
+Both methods are quite important, since those methods become one of
+technique to evaluate the vulnerabilities of the obfuscation methods.
+However, to perform de-obfuscation requires a suitable method for each
+obfuscation method.  Futhermore, the applied protection methods is
+generally private information.  Therefore, identifying applied
+protection methods are important to the first step of the
+de-obfuscation.
+
+On the oter hands, Kanzaki et al. proposed the method to measure the
+artificiality of the program\cite{kanzaki14ipsj}. The method extracts
+$n$-gram from the opcodes of the given program, and computes
+artificiality by the probability from the corpus.
+
+Hence, we tackle to identify the applied obfuscation method towards
+de-obfuscaton with the evaluation method of the program artificiality.
+
+% method of protection in software can separate methods into three
+% technique groups that is (1) prevention of plagiarism, (2) detection
+% of plagiarism, and (3) identification of
+% plagiarism.\cite{collberg09surreptitious} (1) as obfuscation methods
+% and anti-de-assemble methods\cite{tyma00patent,monden97ieice}, (2) as
+% bath mark in software methods\cite{tamada05ieice},and (3) as watermark
+% in software methods mainly researched\cite{collberg99popl}.
+% 
+% Methods of attack are proposed for obfuscation with a factor technique
+% of (1).  One of them is de-change for name obfuscation that is to
+% change the variable name and function name into programs for hard
+% reading\cite{cimato05jss}.  The other one is to classify method for
+% using the abstract syntax tree for applied program with obfuscation
+% method that is to complicate the control flow.  Both methods are
+% useful to establish as methods of attack.  On the other hand, for
+% specializing obfuscation, the method is not general.  Established
+% methods of attack that are bath mark that are a factor technique of
+% (2) and (3) and watermark do not exist.  However, base mark and
+% watermark have common points that is to use the information in
+% program.  That is to say, as their methods are to change the
+% information in reference program, these methods will become to the
+% methods of attack.  For that reason, obfuscation methods with a factor
+% technique of (1) is used as methods of attack\cite{tian13hpcc}.  On
+% the other hand, the methods that is to evaluate unnatural from methods
+% of protect as method of evaluation with obfuscations are
+% proposed\cite{kanzaki14ipsj}.  There is method that is to estimate
+% unnatural from methods of protect by the probability of creations that
+% is to abstract n-gram from opcode in programs.  Kanzaki's method is to
+% evaluate the artificial of degree between opcode that is applied by
+% method of protection and opcode that is to do output by compiler.
 
 \section{Proposed method}
 
 \subsection{key idea}
-As Methods of protection have various methods, various methods carry out the change of program.
-The change is carried out the characteristic management to hide the informations that are to notice various methods.
-For example, as the name in program ( a variable name, method name, and class name etc ) have meaning to contribute for understanding program,
-name obfuscation\cite{tyma00patent} protects program to change the name that is difficult and no-meaning.
-This obfuscation methods are gotten characteristic by methods that is to change the every name.
 
-The name obfuscations such as method that the name is changed one of alphabet, invisibility word such as space and tab, reserved name, repeat name\cite{dasho}, and not only definition part of name but also using part of hiding are proposed various methods\cite{tamada07ieice}. 
+As Methods of protection have various methods, various methods carry
+out the change of program.  The change is carried out the
+characteristic management to hide the informations that are to notice
+various methods.  For example, as the name in program ( a variable
+name, method name, and class name etc ) have meaning to contribute for
+understanding program, name obfuscation\cite{tyma00patent} protects
+program to change the name that is difficult and no-meaning.  This
+obfuscation methods are gotten characteristic by methods that is to
+change the every name.
 
-However, as these name obfuscation carried out obfuscation, it become to be seen the characteristic that is to see various methods to name in program.
-That is to say, the case of name obfuscation is able to identify that every name obfuscation is applied by observing the name.
-Even other method of protect, they are able to hope to be reflected the characteristics of method of protect to program in after change.
-So, we try to identify method of obfuscation by analyzing characteristic of program in after change.
+The name obfuscations such as method that the name is changed one of
+alphabet, invisibility word such as space and tab, reserved name,
+repeat name\cite{dasho}, and not only definition part of name but also
+using part of hiding are proposed various methods\cite{tamada07ieice}.
 
-Base mark that is to distinguish others programs by characteristic in program is proposed.
-Base mark is technique that is to find plagiarism by comparing characteristic with ones that program have originally.
-For difference purpose from this research, it can not apply the base mark as it is, but it can expect the advance method of base mark as standard way of comparison.
-Kanzaki's propose method that is to evaluate unnatural of program.
-This program is to expect n-gram from opcode in program and to evaluate unnatural by requiring generative probability.
-For example, Matuda's evaluate difficult discovery of method of protection by comparing unnatural of fragment of code.
-We assume that method of protection have a proper characteristic by forcing on this method.
-Thus, for proper characteristic, we try to identify how method of protection are used.
-If method of protection can be identified, specializing method of attack for  and attack for the method of protection understanding to method of protection are possible.
-Conversely, if method of protection can not be identified, the key of attack can not be taken  and attack is difficult.
-It show a schematic diagram of method of protection at Figure 3.1.
-Process method and base mark are same as processing that is to extract characteristic from protected program.
+However, as these name obfuscation carried out obfuscation, it become
+to be seen the characteristic that is to see various methods to name
+in program.  That is to say, the case of name obfuscation is able to
+identify that every name obfuscation is applied by observing the name.
+Even other method of protect, they are able to hope to be reflected
+the characteristics of method of protect to program in after change.
+So, we try to identify method of obfuscation by analyzing
+characteristic of program in after change.
+
+Base mark that is to distinguish others programs by characteristic in
+program is proposed.  Base mark is technique that is to find
+plagiarism by comparing characteristic with ones that program have
+originally.  For difference purpose from this research, it can not
+apply the base mark as it is, but it can expect the advance method of
+base mark as standard way of comparison.  Kanzaki's propose method
+that is to evaluate unnatural of program.  This program is to expect
+n-gram from opcode in program and to evaluate unnatural by requiring
+generative probability.  For example, Matuda's evaluate difficult
+discovery of method of protection by comparing unnatural of fragment
+of code.  We assume that method of protection have a proper
+characteristic by forcing on this method.  Thus, for proper
+characteristic, we try to identify how method of protection are used.
+If method of protection can be identified, specializing method of
+attack for and attack for the method of protection understanding to
+method of protection are possible.  Conversely, if method of
+protection can not be identified, the key of attack can not be taken
+and attack is difficult.  It show a schematic diagram of method of
+protection at Figure 3.1.  Process method and base mark are same as
+processing that is to extract characteristic from protected program.
 On the other hand, evaluation point are different.
 %式が出るので後
-In Figure 3.1, protected program p1 p2 are gotten by method of protection f1 f2 with how program are protected.
-So,
+In Figure 3.1, protected program p1 p2 are gotten by method of
+protection f1 f2 with how program are protected.  So,
 %%%%%%
 \begin{figure}[b]
   \centering
