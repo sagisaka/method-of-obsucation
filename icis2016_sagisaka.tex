@@ -115,7 +115,7 @@ After that, we inspect the efficiency for unknown product and unknown
 method of obfuscation from extracted characteristic as evaluation
 experiment.
 
-\section{Related Work}
+\section{Related Works}
 
 The previous protection methods are categorized into (1) preventing
 the theft techniques, (2) detecting stolen programs, and (3) proving
@@ -183,9 +183,34 @@ de-obfuscaton with the evaluation method of the program artificiality.
 % evaluate the artificial of degree between opcode that is applied by
 % method of protection and opcode that is to do output by compiler.
 
-\section{Proposed method}
+\section{The Proposed Method}
 
-\subsection{key idea}
+\subsection{Key Idea}
+
+Various obfuscation methods are proposed in a few decade.  Almost
+methods convert the given program in order to hide the private
+information in the program.  Each coversion characterize the
+obfuscation algorithm to hide a certain information.
+%
+For example, name obfuscation hide means of variables, methods, and
+class names by changing meaningless names\cite{tyma00patent}.
+Because, we assume that the names in the program greatly help to
+understand the program.  Threfore, the name obfuscation method
+protects the program by converting to more incomprehensible program.
+Some algorithms are proposed in the name obfuscation methods how to
+change the names.
+
+Straightforward algorithm is to change variable names into one
+alphabet characters.  More powerful algorithm changes variable names
+into reserved words, and invisible characters such as spaces, tabs,
+control sequences, and etc.  Other algorithms change methods names to
+introduce overloading\cite{tyma00patent}, and change not definition
+parts of symbol names but use parts with dynamic name
+resolution mechanism\cite{tamada07ieice}.
+
+Even though the obfuscation algorithms categorized into the name
+obfuscation methods, we will characteristics of each algorithm from
+the conversion process and resultant programs.
 
 As Methods of protection have various methods, various methods carry
 out the change of program.  The change is carried out the
