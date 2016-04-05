@@ -41,14 +41,12 @@
 %% ** renaming them and changing author support contact information. **
 %%*************************************************************************
 
-
 % *** Authors should verify (and, if needed, correct) their LaTeX system  ***
 % *** with the testflow diagnostic prior to trusting their LaTeX platform ***
 % *** with production work. The IEEE's font choices and paper sizes can   ***
 % *** trigger bugs that do not appear when using other class files.       ***                          ***
 % The testflow support page is at:
 % http://www.michaelshell.org/tex/testflow/
-
 
 
 \documentclass[conference]{IEEEtran}
@@ -159,6 +157,18 @@
 
 % *** MATH PACKAGES ***
 %
+\usepackage{bm}
+
+\usepackage[fleqn]{amsmath}
+\usepackage[psamsfonts]{amssymb}
+\usepackage{url}
+
+
+\newcommand{\birth}[1]{\mathcal{C}(#1)}
+\newcommand{\distinct}[1]{\mathcal{N}_n^d(#1)}
+\newcommand{\distinctnnn}[1]{\mathcal{N}_3^d(#1)}
+
+
 %\usepackage{amsmath}
 % A popular package from the American Mathematical Society that provides
 % many useful and powerful commands for dealing with mathematics.
@@ -553,7 +563,7 @@ Kanzaki's method is to evaluate the artificial of degree between opcode that is 
 
 \section{Proposed method}
 
-\subsection{key idea}
+\subsection{Key idea}
 As Methods of protection have various methods, various methods carry out the change of program.
 The change is carried out the characteristic management to hide the informations that are to notice various methods.
 For example, as the name in program ( a variable name, method name, and class name etc ) have meaning to contribute for understanding program,
@@ -567,45 +577,105 @@ That is to say, the case of name obfuscation is able to identify that every name
 Even other method of protect, they are able to hope to be reflected the characteristics of method of protect to program in after change.
 So, we try to identify method of obfuscation by analyzing characteristic of program in after change.
 
-Base mark that is to distinguish others programs by characteristic in program is proposed.
-Base mark is technique that is to find plagiarism by comparing characteristic with ones that program have originally.
-For difference purpose from this research, it can not apply the base mark as it is, but it can expect the advance method of base mark as standard way of comparison.
-Kanzaki's propose method that is to evaluate unnatural of program.
-This program is to expect n-gram from opcode in program and to evaluate unnatural by requiring generative probability.
-For example, Matuda's evaluate difficult discovery of method of protection by comparing unnatural of fragment of code.
-We assume that method of protection have a proper characteristic by forcing on this method.
-Thus, for proper characteristic, we try to identify how method of protection are used.
-If method of protection can be identified, specializing method of attack for  and attack for the method of protection understanding to method of protection are possible.
-Conversely, if method of protection can not be identified, the key of attack can not be taken  and attack is difficult.
-It show a schematic diagram of method of protection at Figure 3.1.
-Process method and base mark are same as processing that is to extract characteristic from protected program.
-On the other hand, evaluation point are different.
-%式が出るので後
-In Figure 3.1, protected program p1 p2 are gotten by method of protection f1 f2 with how program are protected.
-So,
-%%%%%%
 \begin{figure}[b]
   \centering
   \includegraphics[width=0.78\textwidth]{images/key_idea}
   \caption{提案手法の模式図}\label{fig:keyidea}
 \end{figure}
 
-%図\ref{fig:keyidea}に提案手法の模式図を示す
 
-\subsection{characteristic extraction method}
+Base mark that is to distinguish others programs by characteristic in program is proposed\cite{tamada05ieice}.
+Base mark is technique that is to find plagiarism by comparing characteristic with ones that program have originally.
+For difference purpose from this research, it can not apply the base mark as it is, but it can expect the advance method of base mark as standard way of comparison.
+
+Kanzaki's propose method that is to evaluate unnatural of program\cite{kanzaki14ipsj}.
+This program is to expect n-gram from opcode in program and to evaluate unnatural by requiring generative probability.
+For example, Matuda's evaluate difficult discovery of method of protection by comparing unnatural of fragment of code\cite{matsuda15ipsj}.
+
+We assume that method of protection have a proper characteristic by forcing on this method.
+Thus, for proper characteristic, we try to identify how method of protection are used.
+If method of protection can be identified, specializing method of attack for  and attack for the method of protection understanding to method of protection are possible.
+Conversely, if method of protection can not be identified, the key of attack can not be taken  and attack is difficult.
+
+It show a schematic diagram of method of protection at Figure\ref{fig:keyidea}.
+Process method and base mark are same as processing that is to extract characteristic from protected program.
+On the other hand, evaluation point are different.
+%式が出るので後
+In Figure\ref{fig:keyidea}, protected program $p_1=f_1(p)$,
+$p_2=f_2(p)$ are gotten by any methods of protection $f_1$ と $f_2$ with program $p$.
+
+So, any characteristics $\birth{p_1}, \birth{p_1}, and \birth{p_2}$ are gotten from $p,
+p_1, p_2$ , for using the feature extraction function$\mathcal{C}$.
+
+The interest in base mark technology is part of showing a arrow by a dotted line in Figure\ref{fig:keyidea}.
+As a result, we evaluate that how do $\birth{p}$, $\birth{p_1}, and \birth{p_2}$ look like?, and how do $\birth{p}$ and $\birth{q}$ look difference?
+
+
+The interest in proposed method is part of showing a arrow by a solid line in Figure\ref{fig:keyidea}.
+That is to say, we compare that how do protected same programs by different method look difference ($\birth{p_1}$と$\birth{p_2}$)? and how do protected different programs by same method look like?  
+
+
+\subsection{Characteristic extraction method}
 Although Extracting characteristic is like base mark in method,
 it do not carry out as expected to itself.
 %式が出るので後
 
-Because, different program p and q
+Because, in protected different program $p$ and $q$ by same method $f_1$, as base mark is that program itself is to difference, we expect result as difference($\birth{p_1} \neq\birth{q_1}$).
+However, as proposed method is to take the characteristic in method of protection itself, we expect result as same($\birth{p_1} \approx \birth{q_1}$).
 
-\subsection{indication of characteristic}
+Therefor, we observe Kanzaki's propose method that is to evaluate unnatural of program\cite{kanzaki14ipsj}
+
+This method is to use the rare in $n$-gram of opcode.
+In method of protection, the case is absolutely to insert the sequence of orders in place that is not carried out impossibility, and other case is to rearrange rare order as understanding in original order is difficult.
+
+Thus, we can judgment whether rare order is true or false as showing rarity.
+it is to say that these rare order is characteristic in method of protection.
+creation probability use the perplexity\cite{gekka14scis}.
+Perplexity is known average branch and ais index that express complexity as language.
+It is express that the more little this value is,the more next coming language is predicted.
+As a result, it is say that the more little the value is, the more natural value is.
+
+On the other hand, in the method of protection, the case is that the compiler outputted original orders with repeated.
+
+As The original order is difference with use frequency, it is not to say the rare.
+Thus, the only creation probability is not able to observe the characteristic in method of protection.
+Therefor, we observe the frequency in $n$-gram.
+
+In the above, we extract order in $n$-gram from program, and are characteristic in method of protection with the rare ( perplexity ) and frequency.
+%
+
+\subsection{Indication of characteristic}
 In the proposed method, we measure the characteristic of method of protection how n-gram of opcode before and after in method of protection were changed.
 Thus, we measure four indications how n-gram was changed.
 
-%式が出るので後
+%%
+First, as taken program is $p$, $p_a$ is protected program $p$ by method of protection $f_a$
+($p_a=f_a(p)$).
+And, as collective in $n$-gram that extracted from $\mathcal{N}_n(p)$ to $p$, $\distinct{p}$ is collective that removed after repeated n-gram.
+And, $\bm{p_a}=\{ (k^a_1, v^a_1), (k^a_2, v^a_2), ..., (k^a_m, v^a_m) \}$ is frequency vector 
+of $\mathcal{N}_n(p)$.
+At this time, when program is gotten to converse $p$ to $p_a$, we measure the characteristic in method of protection with next four index. 
 
-First,
+\begin{enumerate}
+\item 追加された$n$-gramの数 $M_a=$（$\overline{\distinct{p}} \cap \distinct{p_a}$）、
+\item 削除された$n$-gramの数 $M_d=$（$\distinct{p} \cap \overline{\distinct{p_a}}$）、
+\item $\distinct{p}$と$\distinct{p_a}$のJaccard係数 $M_j=$（$\displaystyle
+  \frac{|\distinct{p} \cap \distinct{p_a}|}{|\distinct{p} \cup
+    \distinct{p_a}|}$）、
+\item $\bm{p}$と$\bm{p_a}$のコサイン類似度 $M_c=$（$\displaystyle
+  \frac{\sum_{i=1}^{m} v_i v^a_i}{\sqrt{\sum_{i=1}^m v_i}
+    \sqrt{\sum_{i=1}^m v^a_i}}$）
+\end{enumerate}
+%
+
+This is a considerable with similarity calculation in method of base mark.
+However, the observed point in this method is $p$と$p_1$ or $p_1$と$q_1$.
+Thus, we do not observe a comparison of general same program, 
+for example, $p$ and $q$ as base mark.
+
+
+
+%式が出るので後
 
 %%%前回の予備実験のセクション
 %\section{preliminary experiment}
@@ -629,8 +699,24 @@ First,
 %\subsection{analysis in extracted n-gram}
 
 
-\section{evaluation experiment}
-\subsection{summary}
+\section{Experimental evaluation}
+\subsection{Overview}
+
+
+そこで、Javaを対象とした難読化ツールを用い
+て、実際にjarファイル$p, q, r$を難読化する。この難読化手法が$f_n$に相
+当する。そして、難読化前後のjarファイルから特徴$\birth{p}, \birth{q},
+\birth{r}, ..., \birth{p_n}, \birth{q_n}, \birth{r_n}$を抽出する。そし
+て、得られた特徴をグラフにして、互いに比較する。
+
+抽出する特徴は、第\ref{sect:artificiality}節で述べたようにオペコードの
+$n$-gramを基本とし、そのパープレキシティと頻度を用いて比較を行う。
+
+パープレキシティを導出するためにコーパスの構築が必要である。そのため、
+The Apache Software Foundation\footnote{\url{http://www.apache.org/}}
+で配布されているjarファイル 3,786 個を収集した。jarファイル内の総クラ
+ス数は 660,465、総メソッド数は 4,272,567 である。
+
 Some characteristic in method of protection have become clear by preliminary experiment.
 This purpose is how to decide the method of protection from extracted characteristic.
 As extracting characteristic is based on n-gram of opcode such as 
@@ -774,12 +860,6 @@ it can respond to method of unknown obfuscation by increasing characteristic.
 
 % use section* for acknowledgment
 \section*{Acknowledgment}
-
-
-The authors would like to thank...
-
-
-
 
 
 % trigger a \newpage just before the given reference
