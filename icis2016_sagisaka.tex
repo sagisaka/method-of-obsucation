@@ -1,10 +1,6 @@
 \documentclass[conference]{IEEEtran}
 
-\ifCLASSINFOpdf
-  \usepackage[pdftex]{graphicx}
-\else
-  \usepackage[dvips]{graphicx}
-\fi
+\usepackage[dvipdfmx]{graphicx}
 
 \usepackage{bm}
 
@@ -147,11 +143,6 @@ protection methods is generally private information.  Therefore,
 identifying applied protection methods are important to the first step
 of the de-obfuscation.
 
-On the oter hands, Kanzaki et al. proposed the method to measure the
-artificiality of the program\cite{kanzaki14ipsj}. The method extracts
-$n$-gram from the opcodes of the given program, and computes
-artificiality by the probability from the corpus.
-
 % Method of protection in software can separate methods into three
 % technique groups that is (1) prevention of plagiarism, (2) detection
 % of plagiarism, and (3) identification of
@@ -241,20 +232,62 @@ de-obfuscaton by measuring the program artificiality.
 % So, we try to identify method of obfuscation by analyzing
 % characteristic of program in after change.
 
-\subsection{Extracting Characteristics from the Program}
-
-The birthmark methods use characteristics of the program are
-proposed\cite{tamada05ieice}.  Birthmark method originally computes
-similarities between the programs with the extracted native
-characteristics in order to detect pirated program.  The evaluation
-methods of the birthmark can be applied to our method, because both
-methods are quite similar concept, however, the goal is different.
+\subsection{Overview of the Proposed Method}
 
 \begin{figure}[b]
   \centering
-  \includegraphics[width=0.78\textwidth]{images/key_idea}
-  \caption{提案手法の模式図}\label{fig:keyidea}
+  \includegraphics[width=0.49\textwidth]{images/key_idea}
+  \caption{Key idea of the proposed method}\label{fig:keyidea}
 \end{figure}
+
+The birthmark methods have been proposed, which use characteristics of
+the program\cite{tamada05ieice}.  Birthmark method originally computes
+similarities between the programs with the extracted native
+characteristics in order to detect pirated programs.
+%
+The process of our method is ported from birthmark methods, which is
+to extract characteristics from the program, and to compare them.
+However, extracting characteristics are absolutely different.  The
+birthmark methods focus on the characteristics of the program.  Our
+method focuses on the characteristics of the protection method.
+
+On the other hands, Kanzaki et al. proposed the method to measure the
+stealthiness of the program\cite{kanzaki14ipsj}. The method extracts
+$n$-gram from the opcodes of the given program, and computes
+artificiality by the probability from the corpus.  The artificiality
+means how {\em natural} opcode sequences are in the target program.
+Kanzaki et al. assume that a compiler generates natural opcode
+sequences.  Generally, protection methods alter the opcode sequence by
+their algorithm.  Then, the protected program may have unnatural
+opcode sequences.  If a protection method have {\em natural} opcode
+sequences, the algorithm of the method is stealthy.
+
+We focus on the method to compute artificiality, and assume that
+protected program have a certain characteristics of the protection
+algorithm.  Then, we tackle to identify the protection method of the
+program by the extracted characteristics.
+
+Figure \ref{fig:keyidea} shows key idea of the proposed method.  In
+the figure \ref{fig:keyidea}, we aquire obfuscatd program $p_1$ and
+$p_2$ from original program $p$ by certain obfuscation algorithm $f_1$
+and $f_2$ ($p_1 = f_1(p), p_2 = f_2(p)$).  Then, using characteristics
+extraction function $\mathcal{C}$, we extract cetain characteristics
+$\birth{p}$, $\birth{p_1}$, and $\birth{p_2}$ from $p$, $p_1$, and
+$p_2$.
+
+The evaluation aspects of the birthmark method are resilient property
+and credibility property.  To evaluate resilient property compare
+$\birth{p}$ and $\birth{p_1}$, then high score shows $p_1$ and $p$ are
+copy relation.  Also, credibility property compare $\birth{p}$ and
+$\birth{q}$, then, low score shows $p$ and $q$ are independently
+developed.
+
+The evaluation aspect of the proposed method is $\birth{p_1}$ and
+$\birth{p_2}$, and $\birth{p_1}$ and $\birth{q_1}$.  Low score between
+former relation ($\birth{p_1}$ and $\birth{p_2}$) shows different
+protection methods were applied.  Also, high score between latter
+relation ($\birth{p_1}$ and $\birth{q_1}$) shows same protection
+method was applied.
 
 % Base mark that is to distinguish others programs by characteristic in
 % program is proposed\cite{tamada05ieice}.  Base mark is technique that
@@ -278,133 +311,99 @@ methods are quite similar concept, however, the goal is different.
 % possible.  Conversely, if method of protection can not be identified,
 % the key of attack can not be taken and attack is difficult.
 
-It show a schematic diagram of method of protection at
-Figure\ref{fig:keyidea}.  Process method and base mark are same as
-processing that is to extract characteristic from protected program.
-On the other hand, evaluation point are different.
-%式が出るので後
-In Figure\ref{fig:keyidea}, protected program $p_1=f_1(p)$,
-$p_2=f_2(p)$ are gotten by any methods of protection $f_1$ と $f_2$
-with program $p$.
+% It show a schematic diagram of method of protection at
+% Figure\ref{fig:keyidea}.  Process method and base mark are same as
+% processing that is to extract characteristic from protected program.
+% On the other hand, evaluation point are different.
+%%%% 
+% %式が出るので後
+%%%% 
+% In Figure\ref{fig:keyidea}, protected program $p_1=f_1(p)$,
+% $p_2=f_2(p)$ are gotten by any methods of protection $f_1$ と $f_2$
+% with program $p$.
+%%% 
+% So, any characteristics $\birth{p_1}, \birth{p_1}, and \birth{p_2}$
+% are gotten from $p, p_1, p_2$ , for using the feature extraction
+% function$\mathcal{C}$.
+%%% 
+% The interest in base mark technology is part of showing a arrow by a
+% dotted line in Figure\ref{fig:keyidea}.  As a result, we evaluate
+% that how do $\birth{p}$, $\birth{p_1}, and \birth{p_2}$ look like?,
+% and how do $\birth{p}$ and $\birth{q}$ look difference?
+%%% 
+% The interest in proposed method is part of showing a arrow by a
+% solid line in Figure\ref{fig:keyidea}.  That is to say, we compare
+% that how do protected same programs by different method look
+% difference ($\birth{p_1}$と$\birth{p_2}$)? and how do protected
+% different programs by same method look like?
 
-So, any characteristics $\birth{p_1}, \birth{p_1}, and \birth{p_2}$
-are gotten from $p, p_1, p_2$ , for using the feature extraction
-function$\mathcal{C}$.
+\subsection{Characteristics of the Proposed Method}
 
-The interest in base mark technology is part of showing a arrow by a
-dotted line in Figure\ref{fig:keyidea}.  As a result, we evaluate that
-how do $\birth{p}$, $\birth{p_1}, and \birth{p_2}$ look like?, and how
-do $\birth{p}$ and $\birth{q}$ look difference?
+To implement the proposed method, almost birthmark methods would fail
+to identify the protection method.  Because, if we apply a certain
+protection method $f_1$ to different programs $p$ and $q$, birthmark
+method expects $\birth{p} \neq \birth{q}$.  However, the proposed
+method expects $\birth{p_1} \approx \birth{q_1}$.
 
+We focus on the artificiality evaluation method by Kanzaki et al. to
+the proposed method.  A certain protection method inserts ridiculous
+opcode sequence into never executed block.  Another certain protection
+method change natural opcode sequence to unnatural one.  Such unnatual
+opcode sequence might be characteristics of the protection method.
 
-The interest in proposed method is part of showing a arrow by a solid
-line in Figure\ref{fig:keyidea}.  That is to say, we compare that how
-do protected same programs by different method look difference
-($\birth{p_1}$と$\birth{p_2}$)? and how do protected different
-programs by same method look like?
+Originally, Kanzaki et al. computed the artificiality by probability.
+Ohtaki et al. ported Kanzaki's method for object oriented language,
+such as Java\cite{gekka14scis}.  The method uses perplexity metric
+instead of Kanzaki's probability for computing the artificiality.  The
+perplexity metric shows complexity of the natural language.  Low
+perplexity means that next word is easy to expect.
 
+On the other hand, a certain protection method duplicates original
+natural opcode sequence.  Such duplicated sequence is still natural.
+Therefore, we also focus on the frequencies of the $n$-gram.
 
-\subsection{Characteristic extraction method}
+Then, we employ the perplexity metric and frequency of the $n$-gram as
+the characteristics of the protection method.
 
-Although Extracting characteristic is like base mark in method, it do
-not carry out as expected to itself.
-%式が出るので後
-
-Because, in protected different program $p$ and $q$ by same method
-$f_1$, as base mark is that program itself is to difference, we expect
-result as difference($\birth{p_1} \neq\birth{q_1}$).  However, as
-proposed method is to take the characteristic in method of protection
-itself, we expect result as same($\birth{p_1} \approx \birth{q_1}$).
-
-Therefor, we observe Kanzaki's propose method that is to evaluate
-unnatural of program\cite{kanzaki14ipsj}
-
-This method is to use the rare in $n$-gram of opcode.  In method of
-protection, the case is absolutely to insert the sequence of orders in
-place that is not carried out impossibility, and other case is to
-rearrange rare order as understanding in original order is difficult.
-
-Thus, we can judgment whether rare order is true or false as showing
-rarity.  it is to say that these rare order is characteristic in
-method of protection.  creation probability use the
-perplexity\cite{gekka14scis}.  Perplexity is known average branch and
-ais index that express complexity as language.  It is express that the
-more little this value is,the more next coming language is predicted.
-As a result, it is say that the more little the value is, the more
-natural value is.
-
-On the other hand, in the method of protection, the case is that the
-compiler outputted original orders with repeated.
-
-As The original order is difference with use frequency, it is not to
-say the rare.  Thus, the only creation probability is not able to
-observe the characteristic in method of protection.  Therefor, we
-observe the frequency in $n$-gram.
-
-In the above, we extract order in $n$-gram from program, and are
-characteristic in method of protection with the rare ( perplexity )
-and frequency.
+% Although Extracting characteristic is like base mark in method, it do
+% not carry out as expected to itself.
+% %式が出るので後
+% 
+% Because, in protected different program $p$ and $q$ by same method
+% $f_1$, as base mark is that program itself is to difference, we expect
+% result as difference($\birth{p_1} \neq\birth{q_1}$).  However, as
+% proposed method is to take the characteristic in method of protection
+% itself, we expect result as same($\birth{p_1} \approx \birth{q_1}$).
+% 
+% Therefore, we observe Kanzaki's propose method that is to evaluate
+% unnatural of program\cite{kanzaki14ipsj}
+% 
+% This method is to use the rare in $n$-gram of opcode.  In method of
+% protection, the case is absolutely to insert the sequence of orders in
+% place that is not carried out impossibility, and other case is to
+% rearrange rare order as understanding in original order is difficult.
+% 
+% Thus, we can judgment whether rare order is true or false as showing
+% rarity.  it is to say that these rare order is characteristic in
+% method of protection.  creation probability use the
+% perplexity\cite{gekka14scis}.  Perplexity is known average branch and
+% ais index that express complexity as language.  It is express that the
+% more little this value is,the more next coming language is predicted.
+% As a result, it is say that the more little the value is, the more
+% natural value is.
+% 
+% On the other hand, in the method of protection, the case is that the
+% compiler outputted original orders with repeated.
+% 
+% As The original order is difference with use frequency, it is not to
+% say the rare.  Thus, the only creation probability is not able to
+% observe the characteristic in method of protection.  Therefor, we
+% observe the frequency in $n$-gram.
+% 
+% In the above, we extract order in $n$-gram from program, and are
+% characteristic in method of protection with the rare ( perplexity )
+% and frequency.
 %
-
-\subsection{Indication of characteristic}
-
-In the proposed method, we measure the characteristic of method of
-protection how n-gram of opcode before and after in method of
-protection were changed.  Thus, we measure four indications how n-gram
-was changed.
-
-%%
-First, as taken program is $p$, $p_a$ is protected program $p$ by
-method of protection $f_a$ ($p_a=f_a(p)$).  And, as collective in
-$n$-gram that extracted from $\mathcal{N}_n(p)$ to $p$, $\distinct{p}$
-is collective that removed after repeated n-gram.  And, $\bm{p_a}=\{
-(k^a_1, v^a_1), (k^a_2, v^a_2), ..., (k^a_m, v^a_m) \}$ is frequency
-vector of $\mathcal{N}_n(p)$.  At this time, when program is gotten to
-converse $p$ to $p_a$, we measure the characteristic in method of
-protection with next four index.
-
-\begin{enumerate}
-\item 追加された$n$-gramの数 $M_a=$（$\overline{\distinct{p}} \cap
-  \distinct{p_a}$）、
-\item 削除された$n$-gramの数 $M_d=$（$\distinct{p} \cap
-  \overline{\distinct{p_a}}$）、
-\item $\distinct{p}$と$\distinct{p_a}$のJaccard係数
-  $M_j=$（$\displaystyle \frac{|\distinct{p} \cap
-    \distinct{p_a}|}{|\distinct{p} \cup \distinct{p_a}|}$）、
-\item $\bm{p}$と$\bm{p_a}$のコサイン類似度 $M_c=$（$\displaystyle
-  \frac{\sum_{i=1}^{m} v_i v^a_i}{\sqrt{\sum_{i=1}^m v_i}
-    \sqrt{\sum_{i=1}^m v^a_i}}$）
-\end{enumerate}
-%
-
-This is a considerable with similarity calculation in method of base
-mark.  However, the observed point in this method is $p$と$p_1$ or
-$p_1$と$q_1$.  Thus, we do not observe a comparison of general same
-program, for example, $p$ and $q$ as base mark.
-
-%式が出るので後
-
-%%%前回の予備実験のセクション
-%\section{preliminary experiment}
-%\subsection{summary}
-%Before performing the evaluation experiment, we carry out preliminary experiment.
-%
-%This purpose is confirmation that is to detect appearing characteristic in method of protection by proposed method.
-%Therefore, it obfuscate jar file p,q,r in really for using the obfuscation tool as target to Java.
-%
-%%式が出るので後
-%This method of obfuscation is correspond to fn
-%
-%
-%\subsection{Comparison by the proposed indication}
-%
-%
-%\subsection{histogram in n-gram of opcode}
-%
-%\subsection{perplexity in n-gram of opcode}
-%
-%\subsection{analysis in extracted n-gram}
-
 
 \section{Experimental evaluation}
 \subsection{Overview}
