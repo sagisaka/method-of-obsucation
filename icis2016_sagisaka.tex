@@ -42,12 +42,12 @@
   been proposed.  One of the protection methods is the obfuscation
   method. Obfuscation method changes the program to hard to understand
   in order to hide secret information in the program.
-  %
+  %%%
   On the other hand, de-obfuscation is an interesting research topic
   for protecting the software.  Since, though vulnerable protection
-  methods are dangerous, measuring the protection level was not
+  methods are dangerous, measuring the robustness of the method was not
   discussed.
-  %
+  %%%
   In this paper, we tackle to identify the applied obfuscation
   methods towards de-obfuscation.  To perform de-obfuscation requires
   a suitable method for each obfuscation method.  For this, we
@@ -83,38 +83,66 @@
 \IEEEpeerreviewmaketitle
 
 \section{Introduction}
-Recently, illegalities such as illegality access and analysis are
-increasing.  Various methods of protection in software are proposed as
-a measure.  Method of protection in software can guard from the
-injustice access and analysis by prevent the program in advance.
-There is a method of protection called obfuscation that is one of the
-method of protection in software.  The obfuscation is method of
-protection so as not to analyze program.
-%
-For example, name obfuscation that is to change unknown name of
-meaning into class name and method name and control flow of
-obfuscation that is to generate code that is not able to understand
-the meaning when de-compile is tried to do are proposed various
-methods how we falsify data so as not to analyze.  There are the
-methods called de-obfuscation that is to return obfuscation program to
-original program.  As de-obfuscation is taken by illegality access,
-the measure is need.  We consider useful in analyzing for malware that
-is protecting obfuscation by doing research to de-obfuscation.  So, we
-consider new measure for obfuscation and discussion about
-vulnerability of obfuscation.  However, the research about
-de-obfuscation do not ever take for the present.  For taking the
-de-obfuscation, it takes to identify the used obfuscation from various
-obfuscation and needs to make sure how to analyze.  Then, in this
-paper, we analyze the obfuscated program and search the characteristic
-of method of obfuscation.  In specific, we analyze the command of
-software ( jar file ) that is applied method of obfuscation, and get
-to estimation of creation in each n-gram of opcode as preliminary
-experiment.  We compare their results and extract characteristic.
-After that, we inspect the efficiency for unknown product and unknown
-method of obfuscation from extracted characteristic as evaluation
-experiment.
 
-\section{Related Work}
+Serious security incidents have arisen such as illegal analysis and
+software theft.  To prevent such maricious attacks, many protection
+methods were proposed.  However, the robustness of the protection
+methods were never discussed.  Increasing the robustness needs more
+deeper discussion about robustnesses and vulnerabilities.  Especially,
+systematizing how to attack to the protection methods helps evaluation
+and construction of more robust protection method.
+
+This paper focuses on de-obfuscation which converts obfuscated program
+to more understandable program.  If strong de-obfuscation method is
+established, fragile obfuscation methods will be gone.
+%
+We consider the process to apply de-obfuscation method.
+%
+To obtain the de-obfuscated program, we apply reverse transformation
+of the obfuscation algorithm.  The each obfuscation method have
+different algorithm.  That is, reverse transformation also proper for
+each obfuscation method.  Therefore, in the first step, we must
+identify the applied obfuscation method in order to de-obfuscate.
+This paper proposes the identifying method for the applied obfuscation
+method towards de-obfuscation.
+
+Organization of this paper is as follows.  Section
+\ref{sect:relatedworks} introduces related works of the proposed
+method.  Section \ref{sect:method} shows our method.
+
+
+% Recently, illegalities such as illegality access and analysis are
+% increasing.  Various methods of protection in software are proposed
+% as a measure.  Method of protection in software can guard from the
+% injustice access and analysis by prevent the program in advance.
+% There is a method of protection called obfuscation that is one of
+% the method of protection in software.  The obfuscation is method of
+% protection so as not to analyze program.
+%%%
+% For example, name obfuscation that is to change unknown name of
+% meaning into class name and method name and control flow of
+% obfuscation that is to generate code that is not able to understand
+% the meaning when de-compile is tried to do are proposed various
+% methods how we falsify data so as not to analyze.  There are the
+% methods called de-obfuscation that is to return obfuscation program
+% to original program.  As de-obfuscation is taken by illegality
+% access, the measure is need.  We consider useful in analyzing for
+% malware that is protecting obfuscation by doing research to
+% de-obfuscation.  So, we consider new measure for obfuscation and
+% discussion about vulnerability of obfuscation.  However, the
+% research about de-obfuscation do not ever take for the present.  For
+% taking the de-obfuscation, it takes to identify the used obfuscation
+% from various obfuscation and needs to make sure how to analyze.
+% Then, in this paper, we analyze the obfuscated program and search
+% the characteristic of method of obfuscation.  In specific, we
+% analyze the command of software ( jar file ) that is applied method
+% of obfuscation, and get to estimation of creation in each n-gram of
+% opcode as preliminary experiment.  We compare their results and
+% extract characteristic.  After that, we inspect the efficiency for
+% unknown product and unknown method of obfuscation from extracted
+% characteristic as evaluation experiment.
+
+\section{Related Work}\label{sect:relatedworks}
 
 The previous protection methods are categorized into (1) preventing
 the theft techniques, (2) detecting stolen programs, and (3) proving
@@ -133,7 +161,7 @@ Cimato et al. proposed the conversion method to de-obfuscate the names
 in a program.
 %
 Blanc et al. also proposed the de-obfuscating the program to clarify
-its control flow with abstract syntax tree\cite{blanc12waina}.
+its control flow with abstract syntax tree\cite{preda06amast}.
 
 Both methods are quite important, since those methods become one of
 technique to evaluate the robustness and vulnerabilities of the
