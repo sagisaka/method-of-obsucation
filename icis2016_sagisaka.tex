@@ -98,7 +98,7 @@ established, fragile obfuscation methods will be gone.
 %
 We consider the process to apply de-obfuscation method.
 %
-To obtain the de-obfuscated program, we apply reverse transformation
+To get the de-obfuscated program, we apply reverse transformation
 of the obfuscation algorithm.  The each obfuscation method have
 different algorithm.  That is, reverse transformation also proper for
 each obfuscation method.  Therefore, in the first step, we must
@@ -455,57 +455,56 @@ the characteristics of the protection method.
 % and frequency.
 %
 
-\section{Experimental evaluation}\label{sect:studies}
-\subsection{Overview}
+\section{Empirical Studies}\label{sect:studies}
 
-
-そこで、Javaを対象とした難読化ツールを用い
-て、実際にjarファイル$p, q, r$を難読化する。この難読化手法が$f_n$に相
-当する。そして、難読化前後のjarファイルから特徴$\birth{p}, \birth{q},
-\birth{r}, ..., \birth{p_n}, \birth{q_n}, \birth{r_n}$を抽出する。そし
-て、得られた特徴をグラフにして、互いに比較する。
-
-抽出する特徴は、第\ref{sect:artificiality}節で述べたようにオペコードの
-$n$-gramを基本とし、そのパープレキシティと頻度を用いて比較を行う。
-
-パープレキシティを導出するためにコーパスの構築が必要である。そのため、
-The Apache Software Foundation\footnote{\url{http://www.apache.org/}}
-で配布されているjarファイル 3,786 個を収集した。jarファイル内の総クラ
-ス数は 660,465、総メソッド数は 4,272,567 である。
-
-Some characteristic in method of protection have become clear by
-preliminary experiment.  This purpose is how to decide the method of
-protection from extracted characteristic.  As extracting
-characteristic is based on n-gram of opcode such as chapter three,
-verse 2, we compare its with perplexity and frequency.
-
-we conducted a preliminary study to investigate the following
-questions.  RQ1: What kind of characteristic in method of obfuscation?
-
-RQ2-1:Is the characteristic effective measure for unknown product?
-
-RQ2-2:Is the characteristic effective measure for unknown obfuscation?
+\subsection{Overview}\label{sect:study_overview}
 
 \begin{table}[t]
   \centering
   \footnotesize{
-    \caption{利用したJarファイル一覧}\label{table:jars}
-  \begin{tabular}{l|r||l|r||l|r}
-    Product & Version & Product & Version & Products & Version \\ \hline
-    ASM       & 3.3.1 & FakeHack  & 1.0 &JCalendar & 1.3.3   \\
-    Jhstop    & 0.0.1 & Jwhich    & 1.0   & Robocode-setup & 1.6.0.1 
+    \caption{Target jar files}\label{table:jars}
+  \begin{tabular}{l|r||l|r}
+    {\bf Product} & {\bf Version} & {\bf Product} & {\bf Version} \\ \hline
+    ASM       & 3.3.1 & FakeHack  & 1.0 \\
+    Jhstop    & 0.0.1 & Jwhich    & 1.0  \\
+    JCalendar & 1.3.3 & Robocode-setup & 1.6.0.1  \\
   \end{tabular}
-  \caption{利用した難読化ツール}\label{table:tools}
-  \begin{tabular}{ll|l}
-      Tools & Abbr. & Overview \\ \hline
-      Allatori Java Obfuscator & ALL & 商用の難読化ツール \\ \hline
-      ProGurad                 & PG & OSSの難読化ツール \\ \hline
-      Sandmark                 & & 研究用の難読化ツール \\
-      \hspace{0.2cm} Duplication registers & DR & 代入を重複させる。\\
-      \hspace{0.2cm} Merge local integers & MLI & 2つのint変数をlongに収める。\\
-      \hspace{0.2cm} Irreducibility       & IRR & 制御フローを複雑にする。\\
+  \vspace{0.5cm}
+  \caption{Obfuscation tools}\label{table:tools}
+  \begin{tabular}{ll|p{4cm}}
+      {\bf Tools} & {\bf Abbr.} & {\bf Overview} \\ \hline
+      Allatori Java Obfuscator & ALL & Commercial tool. \\ \hline
+      ProGurad                 & PG  & Popular obfuscation tool developed as OSS. \\ \hline
+      Sandmark                 &     & Academic protection tool which have many protection algorithms. \\
+      \hspace{0.1cm} Duplication registers & DR & duplicate register for variables. \\
+      \hspace{0.1cm} Merge local integers & MLI & merge two integer values into one long value.\\
+      \hspace{0.1cm} Irreducibility       & IRR & update the control flow to irreducible one.\\
   \end{tabular}}
 \end{table}
+
+In this study, we conducts three experiments to answer the three
+research questions shown in Section \ref{sect:introduction}.  In the
+first experiment, we extract characteristics of practical protection
+tools, and examine the characteristics.
+%
+Second experiment try to identify the known protection algorithm.
+Third experiment is similar with second experiment, try to identy the
+unknown protection algorithm.
+
+To conduct the experiments, we chose the products shown in Table
+\ref{table:jars}.  Also, the adopted obfuscation tools is shown in
+Table \ref{table:tools}.  We conducted the experiments on the Java
+platform, because many obfuscation algorithm are implemented.
+
+Extracted characteristics are $n$-gram of opcodes, and computes their
+perplexities and frequencies.  The $n$ value is 2, 3, 4, and 5.
+
+At first, we constructed the corpus to computes perplexity.
+Therefore, we downloaded 3,786 jar files which is distributed by the
+apache software foundation.\footnote{\url{http://www.apache.org/}}.
+Note that, the total number of classes is 660,465, and the total
+number of methods is 4,272,567.
+
 
 \subsection{analysis in n-gram}
 
@@ -521,24 +520,24 @@ rare order.  For these data, added order As characteristic in method
 of obfuscation is added order by these datas, the characteristic are
 reported TABLE\ref{table:features}.
 
-
-
 \begin{table}[t]
   \centering
   \footnotesize{
-    \caption{ツールごとの特徴}\label{table:features}
-  \begin{tabular}{l|l}
-    ツール              & 特徴　\\ \hline
-    ALL & オリジナルの命令列を\texttt{swap}命令で入れ替える \\
-    PG  & オリジナルと変化なし \\
-    DR  & \texttt{istore}命令を2回続けて実行する \\
-    MLI & \texttt{dup2x2 lxor}を連続して実行する \\
-    IRR & \texttt{nop}命令がある \\
+    \caption{Characteristics of the protection methods}\label{table:features}
+  \begin{tabular}{l|p{6.5cm}}
+    {\bf Tools} & {\bf Characteristics for identifying} \\ \hline
+    ALL  & Swap two original opcodes by \texttt{swap} instruction. \\
+    PG   & Almost the same as original opcode sequence. \\
+    DR   & Duplicate \texttt{istore} instruction. \\
+    MLI  & Emerge rare 2-gram \texttt{dup2x2 lxor}. \\
+    IRR  & Emerge \texttt{nop} instruction. \\
   \end{tabular}}
 \end{table}
 
 
-\subsection{identifying method of obfuscation in known}
+\subsection{Identifying the known protection algorithm}
+
+In the previous experiment, we 
 
 In this purpose, unknown product are obfuscated by using the tools in
 TABLE\ref{table:features}, after we identify how method of obfuscation
