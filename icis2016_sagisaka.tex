@@ -5,7 +5,7 @@
 \usepackage{bm}
 
 \usepackage[fleqn]{amsmath}
-\usepackage[psamsfonts]{amssymb}
+\usepackage{amssymb}
 \usepackage{url}
 
 \newcommand{\birth}[1]{\mathcal{C}(#1)}
@@ -48,12 +48,12 @@
   methods are dangerous, measuring the robustness of the method was not
   discussed.
   %%%
-  In this paper, we tackle to identify the applied obfuscation
-  methods towards de-obfuscation.  To perform de-obfuscation requires
-  a suitable method for each obfuscation method.  For this, we
-  obfuscated programs by two practical tools and three algorithms
-  from one academic tool.  Then, we analyzed the programs and
-  extracted characteristics from them based on opcodes.  By using our
+  In this paper, we tackle to identify the applied obfuscation methods
+  towards de-obfuscation.  To perform de-obfuscation requires a
+  suitable method for each obfuscation method.  For this, we
+  obfuscated programs by two practical tools and three algorithms from
+  one academic tool.  Then, we analyzed the programs and extracted
+  characteristics from them based on opcodes.  By using the proposed
   method, we could identify the applied obfuscation method.
 
   % Recently, illegalities are increasing with the spread of software.
@@ -82,7 +82,7 @@
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
-\section{Introduction}
+\section{Introduction}\label{sect:introduction}
 
 Serious security incidents have arisen such as illegal analysis and
 software theft.  To prevent such maricious attacks, many protection
@@ -106,9 +106,30 @@ identify the applied obfuscation method in order to de-obfuscate.
 This paper proposes the identifying method for the applied obfuscation
 method towards de-obfuscation.
 
-Organization of this paper is as follows.  Section
-\ref{sect:relatedworks} introduces related works of the proposed
-method.  Section \ref{sect:method} shows our method.
+We develop three research questions to evaluate the proposed method.
+\begin{description}
+\item[RQ1]   What characteristics does the obfuscation method have?
+\item[RQ2-1] Are the characteristics useful to identify the known
+  obfuscation method applied to unknown product?
+\item[RQ2-2] Are the characteristics useful to identify the unknown
+  obfuscation method applied to known product?
+\end{description}
+We conducted the empirical studies to answer the above research
+questions.  The result of the studies shows that the proposed method
+could identify the applied obfuscation method based on the survey of
+the obfuscation methods in advance.
+
+The remainder of this paper is organized as following.
+%
+Section \ref{sect:relatedworks} reviewed related works.
+%
+Section \ref{sect:method} describes the proposed method and illustrates
+its process.
+%
+Section \ref{sect:studies} presents the empirical studies to answer the
+research questions.
+%
+Section \ref{sect:conclusion} shows conclusion and some future works.
 
 
 % Recently, illegalities such as illegality access and analysis are
@@ -202,7 +223,7 @@ of the de-obfuscation.
 % evaluate the artificial of degree between opcode that is applied by
 % method of protection and opcode that is to do output by compiler.
 
-\section{Proposed method}
+\section{Proposed method}\label{sect:method}
 
 \subsection{Key Idea}
 
@@ -225,7 +246,7 @@ into reserved words, and invisible characters such as spaces, tabs,
 control sequences, and etc\cite{dasho}.  Other algorithms change
 methods names to introduce overloading\cite{tyma00patent}, and change
 not definition parts of symbol names but use parts with dynamic name
-resolution mechanism\cite{tamada07ieice}.
+resolution mechanism\cite{tamada07ieice,tamada08iasted}.
 
 Even though the obfuscation algorithms categorized into the name
 obfuscation methods, we will aquire characteristics of each algorithm
@@ -273,11 +294,12 @@ the program\cite{tamada05ieice}.  Birthmark method originally computes
 similarities between the programs with the extracted native
 characteristics in order to detect pirated programs.
 %
-The process of our method is ported from birthmark methods, which is
-to extract characteristics from the program, and to compare them.
-However, extracting characteristics are absolutely different.  The
-birthmark methods focus on the characteristics of the program.  Our
-method focuses on the characteristics of the protection method.
+The process of the proposed method is ported from birthmark methods,
+which is to extract characteristics from the program, and to compare
+them.  However, extracting characteristics are absolutely different.
+The birthmark methods focus on the characteristics of the program.
+The proposed method focuses on the characteristics of the protection
+method.
 
 On the other hands, Kanzaki et al. proposed the method to measure the
 stealthiness of the program\cite{kanzaki14ipsj}. The method extracts
@@ -304,11 +326,11 @@ $\birth{p}$, $\birth{p_1}$, and $\birth{p_2}$ from $p$, $p_1$, and
 $p_2$.
 
 The evaluation aspects of the birthmark method are resilient property
-and credibility property.  To evaluate resilient property compare
-$\birth{p}$ and $\birth{p_1}$, then high score shows $p_1$ and $p$ are
-copy relation.  Also, credibility property compare $\birth{p}$ and
-$\birth{q}$, then, low score shows $p$ and $q$ are independently
-developed.
+and credibility property.  To evaluate resilient property compares
+$\birth{p}$ and $\birth{p_1}$, then high score shows that $p_1$ and
+$p$ are in the copy relation.  Also, credibility property compares
+$\birth{p}$ and $\birth{q}$, then low score shows that $p$ and $q$ are
+developed independently.
 
 The evaluation aspect of the proposed method is $\birth{p_1}$ and
 $\birth{p_2}$, and $\birth{p_1}$ and $\birth{q_1}$.  Low score between
@@ -365,7 +387,7 @@ method was applied.
 % difference ($\birth{p_1}$と$\birth{p_2}$)? and how do protected
 % different programs by same method look like?
 
-\subsection{Characteristics of the Proposed Method}
+\subsection{Characteristics of the Proposed Method}\label{sect:artificiality}
 
 To implement the proposed method, almost birthmark methods would fail
 to identify the protection method.  Because, if we apply a certain
@@ -433,7 +455,7 @@ the characteristics of the protection method.
 % and frequency.
 %
 
-\section{Experimental evaluation}
+\section{Experimental evaluation}\label{sect:studies}
 \subsection{Overview}
 
 
@@ -600,7 +622,8 @@ of product is method of SOP.
 \end{table}
 
 
-\section{Conclusion}
+\section{Conclusion}\label{sect:conclusion}
+
 In this paper, we took the identification of method of protection by
 watching the unnatural evaluation.  The actual program was applied
 method of protection and extracted characteristic to base on frequency
