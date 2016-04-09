@@ -7,6 +7,9 @@
 \usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
 \usepackage{url}
+\usepackage{subfigure}
+\usepackage{multirow}
+
 
 \newcommand{\birth}[1]{\mathcal{C}(#1)}
 \newcommand{\distinct}[1]{\mathcal{N}_n^d(#1)}
@@ -459,25 +462,22 @@ the characteristics of the protection method.
 \subsection{Overview}
 
 
-そこで、Javaを対象とした難読化ツールを用い
-て、実際にjarファイル$p, q, r$を難読化する。この難読化手法が$f_n$に相
-当する。そして、難読化前後のjarファイルから特徴$\birth{p}, \birth{q},
-\birth{r}, ..., \birth{p_n}, \birth{q_n}, \birth{r_n}$を抽出する。そし
-て、得られた特徴をグラフにして、互いに比較する。
+本稿では、提案手法により、保護手法ごとの特徴の検出を目的とする。そこで、
+Javaを対象とした難読化ツールを用いて、実際にjarファイルを難読化する。
+抽出する特徴は、第\ref{sect:method}節で述べたようにオペコードの
+$n$-gramを基本とし、そのパープレキシティと頻度を用いて比較を行う。対象
+とするJarファイルは表\ref{table:jars}に、難読化ツールは表
+\ref{table:tools}に記す。
 
-抽出する特徴は、第\ref{sect:artificiality}節で述べたようにオペコードの
-$n$-gramを基本とし、そのパープレキシティと頻度を用いて比較を行う。
+その解析結果をもとに、不明な難読化手法の解析を行う。
+初めに、未知のプロダクトをケーススタディで扱った
+5つの難読化手法 (表\ref{table:tools}) をランダムに選択し、難読化する。
+その後、どの難読化手法が使われているかを検証する。
+次に、既知のプロダクト (表\ref{table:jars}) を未知の難読化手法で難読化する。
+その後、どの難読化手法が使われているかを検証する。
+未知のプロダクトとしてJUnit 3.7を使用した。
+また、未知の難読化手法としてSandmarkのSimple Opaque Predicates (SOP) を使用した。
 
-パープレキシティを導出するためにコーパスの構築が必要である。そのため、
-The Apache Software Foundation\footnote{\url{http://www.apache.org/}}
-で配布されているjarファイル 3,786 個を収集した。jarファイル内の総クラ
-ス数は 660,465、総メソッド数は 4,272,567 である。
-
-Some characteristic in method of protection have become clear by
-preliminary experiment.  This purpose is how to decide the method of
-protection from extracted characteristic.  As extracting
-characteristic is based on n-gram of opcode such as chapter three,
-verse 2, we compare its with perplexity and frequency.
 
 we conducted a preliminary study to investigate the following
 questions.  RQ1: What kind of characteristic in method of obfuscation?
@@ -490,13 +490,18 @@ RQ2-2:Is the characteristic effective measure for unknown obfuscation?
   \centering
   \footnotesize{
     \caption{利用したJarファイル一覧}\label{table:jars}
-  \begin{tabular}{l|r||l|r||l|r}
+    \begin{tabular}{l|r||l|r||l|r}
     Product & Version & Product & Version & Products & Version \\ \hline
     ASM       & 3.3.1 & FakeHack  & 1.0 &JCalendar & 1.3.3   \\
     Jhstop    & 0.0.1 & Jwhich    & 1.0   & Robocode-setup & 1.6.0.1 
-  \end{tabular}
-  \caption{利用した難読化ツール}\label{table:tools}
-  \begin{tabular}{ll|l}
+  \end{tabular}}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \footnotesize{  
+    \caption{利用した難読化ツール}\label{table:tools}
+    \begin{tabular}{ll|l}
       Tools & Abbr. & Overview \\ \hline
       Allatori Java Obfuscator & ALL & 商用の難読化ツール \\ \hline
       ProGurad                 & PG & OSSの難読化ツール \\ \hline
@@ -507,20 +512,207 @@ RQ2-2:Is the characteristic effective measure for unknown obfuscation?
   \end{tabular}}
 \end{table}
 
-\subsection{analysis in n-gram}
 
-In this purpose, we analyzed order in n-gram by referring to frequency
-and perplexity in each method of obfuscation.  In the analysis result,
-It see different order before and after protection in method of
-obfuscation.
+\subsection{$n$-gramの特徴について}
+ここでは、RQ1について解析を行う。
+それぞれの難読化手法を頻度とパープレキシティを参考に$n$-gramの命令列を解析した。
 
-As a result, we analyze the RQ1.
+%%%
+ここでは、難読化前後の各プログラムのオペコードから、5-gramを抽出した。
+そのヒストグラムを図\ref{fig:asm-5gram-histogram}に示す。全てのグラ
+フの横軸は、難読化前後で得られたプログラムそれぞれから抽出した$5$-gram
+集合の和集合\footnote{ $\distinctnnn{p} \cup \distinctnnn{p_{\rm
+      Allatori}} \cup \distinctnnn{p_{\rm ProGuard} \cup
+    \distinctnnn{p_{\rm yGuard}}}$}であり、縦軸が対応する$n$-gramの頻
+度を対数で表している。図\ref{fig:asm-5gram-histogram}に示す4つのグラ
+フの横軸はすべて同じであり、頻度でソートしている。
 
-Also, we understand that added order is high value of perplexity and
-rare order.  For these data, added order As characteristic in method
-of obfuscation is added order by these datas, the characteristic are
-reported TABLE\ref{table:features}.
+図を見ると、ALL,DR,IRR,MLIで難読化したとき、オリジナルとは異なると
+ころにも山ができている。これは、オリジナルにない命令が、難読化後のプロ
+グラムに大量に追加されていることを示している。
+%%
+特にIRR,MLIで難読化した時には他の難読化と比べて大きく変化していることがわかる。
+この変化から難読化によって共通のオペコードが追加されただけではなく、
+その難読化のみに表れる特徴あるオペコードが存在することがわかる。
 
+また、PGについては難読化を行ったが大きく変化しなかった。
+そのため、提案手法による識別は困難であると言える。
+
+%%
+%AllatoriとProGuardで同じ
+%5-gramが追加されている場合、異なる5-gramが追加されている場合がある。追
+%加された5-gramは最大で1,000程度存在することもわかる。
+%
+%一方で、yGuardのヒストグラムは、表\ref{table:}からもわかるように、
+%オリジナルと大きく変化しないため、提案手法による識別は困難であると言える。
+%%
+
+次に、実際に抽出された$n$-gramから、どのような命令であるのかを確認
+する。$n$が大きいほど、どのようなコードであるかの理解が容易であるため、
+$n=5$の場合を確認する。
+%
+表\ref{table:5gram}に、ASMの難読化前、ALL,DR,IRR,MLI,で難読化した
+それぞれのプログラムから抽出した$5$-gramの頻度上位5つ(その難読化のみにみられた) を示している。命令列の右側に、当該$5$-gramの難読化前後での頻度、パープレキシティを示している。
+
+
+%オリジナルの5-gramを確認する。1位は、staticメソッドの呼び出し後、値を
+%返す命令の並び、2位は、instanceof で値を比較したあと、キャストしている。
+%3位, 4位, 5位もメソッド呼び出しを中心とした命令の並びであり、ありふれ
+%た命令列である。パープレキシティを見ると、1, 3, 5位の命令列は低いもの
+%の、2, 4位の命令列は、若干高くなっている。しかし、4位の命令であっても、
+%ローカル変数をフィールドに代入後、privateメソッドの呼び出しと、ソース
+%コードに素直に変換できる単純な命令の並びである。そのため、ありふれた命
+%令であると言える。
+
+一方、難読化後にしか出現していない命令の並びを見てみると、
+命令の順序を入れ替えた上で、\texttt{swap}でスタックの順序も入れ替えて
+いるものが見られる。
+%
+例えば、ALLの1位の命令列は、他のパープレキシティに比べても、非常に高くなっている。この命令列が高いわけに\texttt{swap}命令列が関係している。
+
+%%%nop命令ではないかも・・・
+別の難読化のDRでは\texttt{lcom}の命令列がパープレキシティが関係している。
+
+このことから、Allatoriは命令の並び中に \texttt{swap} 命令を入れ、命令
+の順序を入れ替えることで難読化を実現していると考えられる。Allatoriのみ
+に追加された5-gramを調査したところ、概ねそのような変換が施されていると
+推測できた。その結果、珍しい命令列が抽出されることになり、Allatoriの特
+徴が掴めたことになる。
+
+
+
+
+%%%
+%オリジナルの5-gramを確認する。1位は、staticメソッドの呼び出し後、値を
+%返す命令の並び、2位は、instanceof で値を比較したあと、キャストしている。
+%3位, 4位, 5位もメソッド呼び出しを中心とした命令の並びであり、ありふれ
+%た命令列である。パープレキシティを見ると、1, 3, 5位の命令列は低いもの
+%の、2, 4位の命令列は、若干高くなっている。しかし、4位の命令であっても、
+%ローカル変数をフィールドに代入後、privateメソッドの呼び出しと、ソース
+%コードに素直に変換できる単純な命令の並びである。そのため、ありふれた命
+%令であると言える。
+%
+%一方、Allatori、ProGuard にしか出現していない命令の並びを見てみると、
+%命令の順序を入れ替えた上で、\texttt{swap}でスタックの順序も入れ替えて
+%いるものが見られる。
+%%
+%例えば、Allatori の2位、4位、5位の命令列は、他のパープレキシティに比べ
+%ても、非常に高くなっている。しかし、オリジナルの2位の命令列を元にして
+%いると考えられる。なぜなら、Allatoriの2, 4, 5位の命令列は、
+%\texttt{instanceofInsn aload swap ifeq checkcast aload invokestatic}と
+%いう7つの命令から抽出されたと考えられる、これは、オリジナル2位の
+%\texttt{aload instanceofInsn ifeq aload checkcast}の3番目に
+%\texttt{swap}命令を挿入し、その前の2つの命令の順序を入れ替えたものに相
+%当するためである。
+%
+%また、ProGuard の2位の命令列は、ここでは、ProGuardにしか現れていないも
+%のの、パープレキシティを見ると、それほど珍しくない命令でもある。この5
+%つの命令列から取り出した$5$-gramは、オリジナルの$5$-gramにも含まれているこ
+%とが確認できた。
+%
+%このことから、Allatoriは命令の並び中に \texttt{swap} 命令を入れ、命令
+%の順序を入れ替えることで難読化を実現していると考えられる。Allatoriのみ
+%に追加された5-gramを調査したところ、概ねそのような変換が施されていると
+%推測できた。その結果、珍しい命令列が抽出されることになり、Allatoriの特
+%徴が掴めたことになる。
+%
+%一方で、ProGuardは、ProGuardのみで抽出できた頻度が300以上の$5$-gramを確
+%認したところ、著しく珍しいと言える5-gramは見つからなかった。そのため、
+%命令列自体を変更しているものの、ProGuardならではの特徴を抽出するには至
+%らなかった。そのため、ProGuardならではの特徴を掴むには、他のアプローチ
+%に取り組む必要がある。
+
+%%%%% 
+
+以上の結果をRQ1の特徴を表\ref{table:features}に示す。
+
+
+
+%%%%%そのツールで難読化した場合のみに現れた表
+\begin{table*}[t]
+  \centering
+  \caption{ASMの難読化前後のオペコードの5-gram（上位5位）}\label{table:5gram}
+  {\footnotesize
+  \begin{tabular}{lc|l|r|r}
+    & 順位 & 5-gram & 頻度 & パープレキシティ \\ \hline
+\multirow{5}{*}{\rotatebox{90}{オリジナル}}
+& 1 & \verb!<code> <code> <code> <code> aload       ! &  219 &   61.18 \\
+& 2 & \verb!<code> <code> <code> aload getfield     ! &  122 &  659.43 \\
+& 3 & \verb!aload getfield ifnull aload getfield    ! &   37 & 2478.75 \\
+& 4 & \verb!istore iload aload arraylength ifIcmpge ! &   32 & 2305.93 \\
+& 5 & \verb!aload ldc invokespecial gotoInsn aload  ! &   30 & 7249.22 \\ \hline
+\multirow{5}{*}{\rotatebox{90}{Allatori}}
+& 1 & \verb!aload dup getfield swap getfield              ! &  39 & 319006.00 \\
+& 2 & \verb!aload getfield ldc invokestatic invokevirtual ! &  32 &   5954.31 \\
+& 3 & \verb!ldc invokestatic aload invokevirtual ifeq     ! &  32 &   2293.93 \\
+& 4 & \verb!gotoInsn ldc invokestatic aload invokevirtual ! &  26 &   8649.32 \\
+& 5 & \verb!dup istore iload ifIcmpge aload               ! &  25 &  10182.30 \\ \hline
+\multirow{5}{*}{\rotatebox{90}{DR}}
+& 1 & \verb!iconst0 dup istore istore iload       ! & 30 & 10835.90 \\
+& 2 & \verb!dup istore istore iload aload         ! & 27 & 30839.00 \\
+& 3 & \verb!istore istore iload aload arraylength ! & 20 & 83120.00 \\
+& 4 & \verb!invokevirtual pop iconst0 dup istore  ! & 17 & 22690.10 \\
+& 5 & \verb!pop iconst0 dup istore istore         ! & 17 & 14101.40 \\ \hline
+\multirow{5}{*}{\rotatebox{90}{IRR}}
+& 1 & \verb!i2l iconst0 i2l lcmp iconst1  ! & 71 & 10835.90 \\
+& 2 & \verb!i2l lcmp iconst1 ixor iconst1 ! & 71 & 30839.00 \\
+& 3 & \verb!iconst0 i2l lcmp iconst1 ixor ! & 71 & 83120.00 \\
+& 4 & \verb!iconst1 ixor iconst1 iand nop ! & 71 &  1313.94 \\
+& 5 & \verb!iconst2 irem istore iload i2l ! & 71 & 14714.20 \\ \hline
+\multirow{5}{*}{\rotatebox{90}{MRI}}
+& 1 & \verb!dup2X2 lxor lconst1 lneg bipush ! & 291 & 1.13E+06 \\
+& 2 & \verb!lload dup2X2 lxor lconst1 lneg  ! & 291 & 5.37E+05 \\
+& 3 & \verb!aload lload bipush lshr l2i     ! & 253 & 5.14E+03 \\
+& 4 & \verb!bipush lushr land lxor lstore   ! & 187 & 5.21E+04 \\
+& 5 & \verb!lconst1 lneg bipush lushr land  ! & 187 & 9.63E+04 \\ 
+  \end{tabular}}
+\end{table*}
+
+\begin{figure}[b]
+  \centering
+  \subfigure[オリジナル]{
+    \includegraphics[clip,width=0.48\columnwidth]{images/ORI.eps}
+    \label{fig:asm-5gram-original-histogram}
+  }%
+  \subfigure[ALL]{
+    \includegraphics[clip,width=0.48\columnwidth]{images/ALL.eps}
+    \label{fig:asm-5gram-ALL-histogram}
+  }
+  \subfigure[DR]{
+    \includegraphics[clip,width=0.48\columnwidth]{images/DR.eps}
+    \label{fig:asm-5gram-DR-histogram}
+  }%
+  \subfigure[IRR]{
+    \includegraphics[clip,width=0.48\columnwidth]{images/IRR.eps}
+    \label{fig:asm-5gram-IRR-histogram}
+  }
+  \subfigure[MLI]{
+    \includegraphics[clip,width=0.48\columnwidth]{images/MLI.eps}
+    \label{fig:asm-5gram-MLI-histogram}
+  }%
+  \subfigure[PG]{
+    \includegraphics[clip,width=0.48\columnwidth]{images/PG.eps}
+    \label{fig:asm-5gram-PG-histogram}
+  }
+  \caption{ASMのオペコードの$5$-gram ヒストグラム(頻度でソート)}\label{fig:asm-5gram-histogram}
+\end{figure}
+
+
+%%%%%
+
+%\subsection{analysis in n-gram}
+%
+%In this purpose, we analyzed order in n-gram by referring to frequency
+%and perplexity in each method of obfuscation.  In the analysis result,
+%It see different order before and after protection in method of
+%obfuscation.
+%
+%As a result, we analyze the RQ1.
+%
+%Also, we understand that added order is high value of perplexity and
+%rare order.  For these data, added order As characteristic in method
+%of obfuscation is added order by these datas, the characteristic are
+%reported TABLE\ref{table:features}.
 
 
 \begin{table}[t]
