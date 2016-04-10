@@ -7,9 +7,10 @@
 \usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
 \usepackage{url}
-\usepackage{subfigure}
 \usepackage{multirow}
-
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
 
 \newcommand{\birth}[1]{\mathcal{C}(#1)}
 \newcommand{\distinct}[1]{\mathcal{N}_n^d(#1)}
@@ -101,7 +102,7 @@ established, fragile obfuscation methods will be gone.
 %
 We consider the process to apply de-obfuscation method.
 %
-To obtain the de-obfuscated program, we apply reverse transformation
+To get the de-obfuscated program, we apply reverse transformation
 of the obfuscation algorithm.  The each obfuscation method have
 different algorithm.  That is, reverse transformation also proper for
 each obfuscation method.  Therefore, in the first step, we must
@@ -456,375 +457,341 @@ the characteristics of the protection method.
 % In the above, we extract order in $n$-gram from program, and are
 % characteristic in method of protection with the rare ( perplexity )
 % and frequency.
-%
 
-\section{Experimental evaluation}\label{sect:studies}
-\subsection{Overview}
+\section{Empirical Studies}\label{sect:studies}
 
-
-本稿では、提案手法により、保護手法ごとの特徴の検出を目的とする。そこで、
-Javaを対象とした難読化ツールを用いて、実際にjarファイルを難読化する。
-抽出する特徴は、第\ref{sect:method}節で述べたようにオペコードの
-$n$-gramを基本とし、そのパープレキシティと頻度を用いて比較を行う。対象
-とするJarファイルは表\ref{table:jars}に、難読化ツールは表
-\ref{table:tools}に記す。
-
-その解析結果をもとに、不明な難読化手法の解析を行う。
-初めに、未知のプロダクトをケーススタディで扱った
-5つの難読化手法 (表\ref{table:tools}) をランダムに選択し、難読化する。
-その後、どの難読化手法が使われているかを検証する。
-次に、既知のプロダクト (表\ref{table:jars}) を未知の難読化手法で難読化する。
-その後、どの難読化手法が使われているかを検証する。
-未知のプロダクトとしてJUnit 3.7を使用した。
-また、未知の難読化手法としてSandmarkのSimple Opaque Predicates (SOP) を使用した。
-
-
-we conducted a preliminary study to investigate the following
-questions.  RQ1: What kind of characteristic in method of obfuscation?
-
-RQ2-1:Is the characteristic effective measure for unknown product?
-
-RQ2-2:Is the characteristic effective measure for unknown obfuscation?
+\subsection{Overview}\label{sect:study_overview}
 
 \begin{table}[t]
   \centering
   \footnotesize{
-    \caption{利用したJarファイル一覧}\label{table:jars}
-    \begin{tabular}{l|r||l|r||l|r}
-    Product & Version & Product & Version & Products & Version \\ \hline
-    ASM       & 3.3.1 & FakeHack  & 1.0 &JCalendar & 1.3.3   \\
-    Jhstop    & 0.0.1 & Jwhich    & 1.0   & Robocode-setup & 1.6.0.1 
+    \caption{Target jar files}\label{table:jars}
+  \begin{tabular}{l|r||l|r}
+    \textbf{Product} & \textbf{Version} & \textbf{Product} & \textbf{Version} \\ \hline
+    ASM       & 3.3.1 & FakeHack  & 1.0 \\
+    Jhstop    & 0.0.1 & Jwhich    & 1.0  \\
+    JCalendar & 1.3.3 & Robocode-setup & 1.6.0.1  \\
+  \end{tabular}
+  \vspace{0.5cm}
+  \caption{Obfuscation tools}\label{table:tools}
+  \begin{tabular}{ll|p{4cm}}
+      \textbf{Tools (Algorithms)} & \textbf{Abbr.} & \textbf{Description} \\ \hline
+      Allatori Java Obfuscator\footnotemark[1] & ALL & Commercial tool. \\ \hline
+      ProGurad\footnotemark[2]                 & PG  & Popular OSS obfuscation tool. \\ \hline
+      Sandmark\footnotemark[3]                 &     & Academic protection tool which have many protection algorithms. \\
+      \hspace{0.1cm} Duplication registers & DR & duplicate register for variables. \\
+      \hspace{0.1cm} Merge local integers & MLI & merge two integer values into one long value.\\
+      \hspace{0.1cm} Irreducibility       & IRR & update the control flow to irreducible one.\\
   \end{tabular}}
 \end{table}
 
-\begin{table}[t]
+In this study, we conducts three experiments to answer the three
+research questions.
+\begin{description}
+\item[RQ1]   What characteristics does the obfuscation method have?
+\item[RQ2-1] Are the characteristics useful to identify the known
+  obfuscation method applied to unknown product?
+\item[RQ2-2] Are the characteristics useful to identify the unknown
+  obfuscation method applied to known product?
+\end{description}
+In the first experiment, we extract $n$-grams of practical protection
+tools, and investigate the characteristics.
+%
+Second experiment try to identify the known protection algorithm.
+Third experiment is similar with second experiment, try to identy the
+unknown protection algorithm.
+
+To conduct the experiments, we chose the products shown in Table
+\ref{table:jars}.  Also, the adopted obfuscation tools are shown in
+Table \ref{table:tools}.  The first column represents tool names and
+algorithm names of Sandmark.  The column named \textbf{Abbr.} shows
+abbreviation of the tools and algorithms.  The last column shows short
+description of each tool and algorithm.
+%
+We conducted the experiments on the Java platform, because many
+obfuscation algorithm are implemented.
+
+Extracted characteristics are $n$-gram of opcodes, and computes their
+perplexities and frequencies.  The $n$ value is 2, 3, 4, and 5.
+
+\footnotetext[1]{\url{http://www.allatori.com}}
+\footnotetext[2]{\url{http://proguard.sourceforge.net}}
+\footnotetext[3]{\url{http://sandmark.cs.arizona.edu}}
+
+At first, we constructed the corpus to computes perplexity.
+Therefore, we downloaded 3,786 jar files which is distributed by the
+apache software foundation.\footnote[4]{\url{http://www.apache.org/}}.
+Note that, the total number of classes is 660,465, and the total
+number of methods is 4,272,567.
+
+\subsection{Analysis of $n$-gram}\label{sect:rq1}
+
+\begin{figure}[bt]
   \centering
-  \footnotesize{  
-    \caption{利用した難読化ツール}\label{table:tools}
-    \begin{tabular}{ll|l}
-      Tools & Abbr. & Overview \\ \hline
-      Allatori Java Obfuscator & ALL & 商用の難読化ツール \\ \hline
-      ProGurad                 & PG & OSSの難読化ツール \\ \hline
-      Sandmark                 & & 研究用の難読化ツール \\
-      \hspace{0.2cm} Duplication registers & DR & 代入を重複させる。\\
-      \hspace{0.2cm} Merge local integers & MLI & 2つのint変数をlongに収める。\\
-      \hspace{0.2cm} Irreducibility       & IRR & 制御フローを複雑にする。\\
-  \end{tabular}}
-\end{table}
+  \begin{minipage}[b]{0.48\linewidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/ORI}%
+    \subcaption{Original}\label{fig:asm-5gram-original-histogram}%
+  \end{minipage}
+  \begin{minipage}[b]{0.48\linewidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/ALL}%
+    \subcaption{ALL}\label{fig:asm-5gram-ALL-histogram}%
+  \end{minipage}
+  \begin{minipage}[b]{0.48\linewidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/DR}%
+    \subcaption{DR}\label{fig:asm-5gram-DR-histogram}%
+  \end{minipage}
+  \begin{minipage}[b]{0.48\linewidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/IRR}%
+    \subcaption{IRR}\label{fig:asm-5gram-IRR-histogram}%
+  \end{minipage}
+  \begin{minipage}[b]{0.48\linewidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/MLI}%
+    \subcaption{MLI}\label{fig:asm-5gram-MLI-histogram}%
+  \end{minipage}
+  \begin{minipage}[b]{0.48\linewidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/PG}%
+    \subcaption{PG}\label{fig:asm-5gram-PG-histogram}%
+  \end{minipage}
+  \caption{Histogram of ASM opcdoe in 5-gram (Sorted by original 5-gram frequencies)}
+  \label{fig:asm-5gram-histogram}
+\end{figure}
 
+In this experiment, we try to characterize the protection methods.  At
+first, we obfuscate 6 products shown in Table \ref{table:jars} by 5
+obfuscators shown in Table \ref{table:tools}.  Next, we extract
+$n$-grams of opcode sequence from gotten 30 products and 6 original
+products.  Finally, we investigate characteristics of each tool.
 
-\subsection{$n$-gramの特徴について}
-ここでは、RQ1について解析を行う。
-それぞれの難読化手法を頻度とパープレキシティを参考に$n$-gramの命令列を解析した。
-
-%%%
-ここでは、難読化前後の各プログラムのオペコードから、5-gramを抽出した。
-そのヒストグラムを図\ref{fig:asm-5gram-histogram}に示す。全てのグラ
-フの横軸は、難読化前後で得られたプログラムそれぞれから抽出した$5$-gram
-集合の和集合\footnote{ $\distinctnnn{p} \cup \distinctnnn{p_{\rm
-      Allatori}} \cup \distinctnnn{p_{\rm ProGuard} \cup
-    \distinctnnn{p_{\rm yGuard}}}$}であり、縦軸が対応する$n$-gramの頻
-度を対数で表している。図\ref{fig:asm-5gram-histogram}に示す4つのグラ
-フの横軸はすべて同じであり、頻度でソートしている。
-
-図を見ると、ALL,DR,IRR,MLIで難読化したとき、オリジナルとは異なると
-ころにも山ができている。これは、オリジナルにない命令が、難読化後のプロ
-グラムに大量に追加されていることを示している。
-%%
-特にIRR,MLIで難読化した時には他の難読化と比べて大きく変化していることがわかる。
-この変化から難読化によって共通のオペコードが追加されただけではなく、
-その難読化のみに表れる特徴あるオペコードが存在することがわかる。
-
-また、PGについては難読化を行ったが大きく変化しなかった。
-そのため、提案手法による識別は困難であると言える。
-
-%%
-%AllatoriとProGuardで同じ
-%5-gramが追加されている場合、異なる5-gramが追加されている場合がある。追
-%加された5-gramは最大で1,000程度存在することもわかる。
+The histogram of opcode frequencies is shown in the figure
+\ref{fig:asm-5gram-histogram}.  The horizontal axis represents each
+5-gram, and the vertical axis shows their frequencies in logarithm.
+The order of horizontal axes of all graphs are the same as original
+histogram.
 %
-%一方で、yGuardのヒストグラムは、表\ref{table:}からもわかるように、
-%オリジナルと大きく変化しないため、提案手法による識別は困難であると言える。
-%%
+The histogram of original and PG look the same.  From investigation
+of their 5-grams, both 5-grams were just the same.  We also
+investigated 5-grams from other products, the result was almost the
+same as 5-gram from original.  The main algorithm of PG does not
+affect opcode sequences.  Therefore, the proposed method are not
+useful for such obfuscation methods, which keep opcode sequences.
 
-次に、実際に抽出された$n$-gramから、どのような命令であるのかを確認
-する。$n$が大きいほど、どのようなコードであるかの理解が容易であるため、
-$n=5$の場合を確認する。
-%
-表\ref{table:5gram}に、ASMの難読化前、ALL,DR,IRR,MLI,で難読化した
-それぞれのプログラムから抽出した$5$-gramの頻度上位5つ(その難読化のみにみられた) を示している。命令列の右側に、当該$5$-gramの難読化前後での頻度、パープレキシティを示している。
+On the other hand, histogram of other tools are dramatically different
+from original histogram.  The results shows that the protection
+methods may affect the opcode sequences by their characteristics.
 
+Table \ref{table:5gram} shows 5-gram of ASM (top 5 frequencies).  In
+the Table \ref{table:5gram}, we omited PG, since just the same as
+original 5-grams.  From the table \ref{table:5gram}, frequencies were
+decreased except MLI, and perplexities became quite high value.  The
+result shows that obfuscated opcode sequences have rare opcode
+fragments, and their fragments would be characteristics.
 
-%オリジナルの5-gramを確認する。1位は、staticメソッドの呼び出し後、値を
-%返す命令の並び、2位は、instanceof で値を比較したあと、キャストしている。
-%3位, 4位, 5位もメソッド呼び出しを中心とした命令の並びであり、ありふれ
-%た命令列である。パープレキシティを見ると、1, 3, 5位の命令列は低いもの
-%の、2, 4位の命令列は、若干高くなっている。しかし、4位の命令であっても、
-%ローカル変数をフィールドに代入後、privateメソッドの呼び出しと、ソース
-%コードに素直に変換できる単純な命令の並びである。そのため、ありふれた命
-%令であると言える。
-
-一方、難読化後にしか出現していない命令の並びを見てみると、
-命令の順序を入れ替えた上で、\texttt{swap}でスタックの順序も入れ替えて
-いるものが見られる。
-%
-例えば、ALLの1位の命令列は、他のパープレキシティに比べても、非常に高くなっている。この命令列が高いわけに\texttt{swap}命令列が関係している。
-
-%%%nop命令ではないかも・・・
-別の難読化のDRでは\texttt{lcom}の命令列がパープレキシティが関係している。
-
-このことから、Allatoriは命令の並び中に \texttt{swap} 命令を入れ、命令
-の順序を入れ替えることで難読化を実現していると考えられる。Allatoriのみ
-に追加された5-gramを調査したところ、概ねそのような変換が施されていると
-推測できた。その結果、珍しい命令列が抽出されることになり、Allatoriの特
-徴が掴めたことになる。
-
-
-
-
-%%%
-%オリジナルの5-gramを確認する。1位は、staticメソッドの呼び出し後、値を
-%返す命令の並び、2位は、instanceof で値を比較したあと、キャストしている。
-%3位, 4位, 5位もメソッド呼び出しを中心とした命令の並びであり、ありふれ
-%た命令列である。パープレキシティを見ると、1, 3, 5位の命令列は低いもの
-%の、2, 4位の命令列は、若干高くなっている。しかし、4位の命令であっても、
-%ローカル変数をフィールドに代入後、privateメソッドの呼び出しと、ソース
-%コードに素直に変換できる単純な命令の並びである。そのため、ありふれた命
-%令であると言える。
-%
-%一方、Allatori、ProGuard にしか出現していない命令の並びを見てみると、
-%命令の順序を入れ替えた上で、\texttt{swap}でスタックの順序も入れ替えて
-%いるものが見られる。
-%%
-%例えば、Allatori の2位、4位、5位の命令列は、他のパープレキシティに比べ
-%ても、非常に高くなっている。しかし、オリジナルの2位の命令列を元にして
-%いると考えられる。なぜなら、Allatoriの2, 4, 5位の命令列は、
-%\texttt{instanceofInsn aload swap ifeq checkcast aload invokestatic}と
-%いう7つの命令から抽出されたと考えられる、これは、オリジナル2位の
-%\texttt{aload instanceofInsn ifeq aload checkcast}の3番目に
-%\texttt{swap}命令を挿入し、その前の2つの命令の順序を入れ替えたものに相
-%当するためである。
-%
-%また、ProGuard の2位の命令列は、ここでは、ProGuardにしか現れていないも
-%のの、パープレキシティを見ると、それほど珍しくない命令でもある。この5
-%つの命令列から取り出した$5$-gramは、オリジナルの$5$-gramにも含まれているこ
-%とが確認できた。
-%
-%このことから、Allatoriは命令の並び中に \texttt{swap} 命令を入れ、命令
-%の順序を入れ替えることで難読化を実現していると考えられる。Allatoriのみ
-%に追加された5-gramを調査したところ、概ねそのような変換が施されていると
-%推測できた。その結果、珍しい命令列が抽出されることになり、Allatoriの特
-%徴が掴めたことになる。
-%
-%一方で、ProGuardは、ProGuardのみで抽出できた頻度が300以上の$5$-gramを確
-%認したところ、著しく珍しいと言える5-gramは見つからなかった。そのため、
-%命令列自体を変更しているものの、ProGuardならではの特徴を抽出するには至
-%らなかった。そのため、ProGuardならではの特徴を掴むには、他のアプローチ
-%に取り組む必要がある。
-
-%%%%% 
-
-以上の結果をRQ1の特徴を表\ref{table:features}に示す。
-
-
-
-%%%%%そのツールで難読化した場合のみに現れた表
 \begin{table*}[t]
   \centering
-  \caption{ASMの難読化前後のオペコードの5-gram（上位5位）}\label{table:5gram}
+  \caption{ASM opcodes in 5-gram before/after obfuscation (top 5 frequencies)}\label{table:5gram}
   {\footnotesize
   \begin{tabular}{lc|l|r|r}
-    & 順位 & 5-gram & 頻度 & パープレキシティ \\ \hline
-\multirow{5}{*}{\rotatebox{90}{オリジナル}}
-& 1 & \verb!<code> <code> <code> <code> aload       ! &  219 &   61.18 \\
-& 2 & \verb!<code> <code> <code> aload getfield     ! &  122 &  659.43 \\
-& 3 & \verb!aload getfield ifnull aload getfield    ! &   37 & 2478.75 \\
-& 4 & \verb!istore iload aload arraylength ifIcmpge ! &   32 & 2305.93 \\
-& 5 & \verb!aload ldc invokespecial gotoInsn aload  ! &   30 & 7249.22 \\ \hline
-\multirow{5}{*}{\rotatebox{90}{Allatori}}
-& 1 & \verb!aload dup getfield swap getfield              ! &  39 & 319006.00 \\
-& 2 & \verb!aload getfield ldc invokestatic invokevirtual ! &  32 &   5954.31 \\
-& 3 & \verb!ldc invokestatic aload invokevirtual ifeq     ! &  32 &   2293.93 \\
-& 4 & \verb!gotoInsn ldc invokestatic aload invokevirtual ! &  26 &   8649.32 \\
-& 5 & \verb!dup istore iload ifIcmpge aload               ! &  25 &  10182.30 \\ \hline
-\multirow{5}{*}{\rotatebox{90}{DR}}
-& 1 & \verb!iconst0 dup istore istore iload       ! & 30 & 10835.90 \\
-& 2 & \verb!dup istore istore iload aload         ! & 27 & 30839.00 \\
-& 3 & \verb!istore istore iload aload arraylength ! & 20 & 83120.00 \\
-& 4 & \verb!invokevirtual pop iconst0 dup istore  ! & 17 & 22690.10 \\
-& 5 & \verb!pop iconst0 dup istore istore         ! & 17 & 14101.40 \\ \hline
-\multirow{5}{*}{\rotatebox{90}{IRR}}
-& 1 & \verb!i2l iconst0 i2l lcmp iconst1  ! & 71 & 10835.90 \\
-& 2 & \verb!i2l lcmp iconst1 ixor iconst1 ! & 71 & 30839.00 \\
-& 3 & \verb!iconst0 i2l lcmp iconst1 ixor ! & 71 & 83120.00 \\
-& 4 & \verb!iconst1 ixor iconst1 iand nop ! & 71 &  1313.94 \\
-& 5 & \verb!iconst2 irem istore iload i2l ! & 71 & 14714.20 \\ \hline
-\multirow{5}{*}{\rotatebox{90}{MRI}}
-& 1 & \verb!dup2X2 lxor lconst1 lneg bipush ! & 291 & 1.13E+06 \\
-& 2 & \verb!lload dup2X2 lxor lconst1 lneg  ! & 291 & 5.37E+05 \\
-& 3 & \verb!aload lload bipush lshr l2i     ! & 253 & 5.14E+03 \\
-& 4 & \verb!bipush lushr land lxor lstore   ! & 187 & 5.21E+04 \\
-& 5 & \verb!lconst1 lneg bipush lushr land  ! & 187 & 9.63E+04 \\ 
+    & \textbf{Rank} & \textbf{5-gram} & \textbf{Frequency} & \textbf{Perplexity} \\ \hline
+\multirow{5}{*}{{Original}}
+& 1 & \verb!<code> <code> <code> <code> aload       ! &  219 & 6.12$\times10^1$ \\
+& 2 & \verb!<code> <code> <code> aload getfield     ! &  122 & 6.59$\times10^2$ \\
+& 3 & \verb!aload getfield ifnull aload getfield    ! &   37 & 2.48$\times10^3$ \\
+& 4 & \verb!istore iload aload arraylength ifIcmpge ! &   32 & 2.31$\times10^3$ \\
+& 5 & \verb!aload ldc invokespecial goto aload      ! &   30 & 7.25$\times10^3$ \\ \hline
+\multirow{5}{*}{{ALL}}
+& 1 & \verb!aload dup getfield swap getfield              ! &  39 & 3.19$\times10^5$ \\
+& 2 & \verb!aload getfield ldc invokestatic invokevirtual ! &  32 & 5.95$\times10^3$ \\
+& 3 & \verb!ldc invokestatic aload invokevirtual ifeq     ! &  32 & 2.29$\times10^3$ \\
+& 4 & \verb!goto ldc invokestatic aload invokevirtual     ! &  26 & 8.65$\times10^3$ \\
+& 5 & \verb!dup istore iload ifIcmpge aload               ! &  25 & 1.02$\times10^4$ \\ \hline
+\multirow{5}{*}{{DR}}
+& 1 & \verb!iconst0 dup istore istore iload       ! & 30 & 1.08$\times10^4$ \\
+& 2 & \verb!dup istore istore iload aload         ! & 27 & 3.08$\times10^4$ \\
+& 3 & \verb!istore istore iload aload arraylength ! & 20 & 8.31$\times10^4$ \\
+& 4 & \verb!invokevirtual pop iconst0 dup istore  ! & 17 & 2.27$\times10^4$ \\
+& 5 & \verb!pop iconst0 dup istore istore         ! & 17 & 1.41$\times10^4$ \\ \hline
+\multirow{5}{*}{{MLI}}
+& 1 & \verb!dup2X2 lxor lconst1 lneg bipush ! & 291 & 1.13$\times10^6$ \\
+& 2 & \verb!lload dup2X2 lxor lconst1 lneg  ! & 291 & 5.37$\times10^5$ \\
+& 3 & \verb!aload lload bipush lshr l2i     ! & 253 & 5.14$\times10^3$ \\
+& 4 & \verb!bipush lushr land lxor lstore   ! & 187 & 5.21$\times10^4$ \\
+& 5 & \verb!lconst1 lneg bipush lushr land  ! & 187 & 9.63$\times10^4$ \\ \hline
+\multirow{5}{*}{{IRR}}
+& 1 & \verb!i2l iconst0 i2l lcmp iconst1  ! & 71 & 1.08$\times10^4$ \\
+& 2 & \verb!i2l lcmp iconst1 ixor iconst1 ! & 71 & 3.08$\times10^4$ \\
+& 3 & \verb!iconst0 i2l lcmp iconst1 ixor ! & 71 & 8.31$\times10^4$ \\
+& 4 & \verb!iconst1 ixor iconst1 iand nop ! & 71 & 1.31$\times10^3$ \\
+& 5 & \verb!iconst2 irem istore iload i2l ! & 71 & 1.47$\times10^4$ \\
   \end{tabular}}
 \end{table*}
 
-\begin{figure}[b]
-  \centering
-  \subfigure[オリジナル]{
-    \includegraphics[clip,width=0.48\columnwidth]{images/ORI.eps}
-    \label{fig:asm-5gram-original-histogram}
-  }%
-  \subfigure[ALL]{
-    \includegraphics[clip,width=0.48\columnwidth]{images/ALL.eps}
-    \label{fig:asm-5gram-ALL-histogram}
-  }
-  \subfigure[DR]{
-    \includegraphics[clip,width=0.48\columnwidth]{images/DR.eps}
-    \label{fig:asm-5gram-DR-histogram}
-  }%
-  \subfigure[IRR]{
-    \includegraphics[clip,width=0.48\columnwidth]{images/IRR.eps}
-    \label{fig:asm-5gram-IRR-histogram}
-  }
-  \subfigure[MLI]{
-    \includegraphics[clip,width=0.48\columnwidth]{images/MLI.eps}
-    \label{fig:asm-5gram-MLI-histogram}
-  }%
-  \subfigure[PG]{
-    \includegraphics[clip,width=0.48\columnwidth]{images/PG.eps}
-    \label{fig:asm-5gram-PG-histogram}
-  }
-  \caption{ASMのオペコードの$5$-gram ヒストグラム(頻度でソート)}\label{fig:asm-5gram-histogram}
-\end{figure}
-
-
-%%%%%
-
-%\subsection{analysis in n-gram}
-%
-%In this purpose, we analyzed order in n-gram by referring to frequency
-%and perplexity in each method of obfuscation.  In the analysis result,
-%It see different order before and after protection in method of
-%obfuscation.
-%
-%As a result, we analyze the RQ1.
-%
-%Also, we understand that added order is high value of perplexity and
-%rare order.  For these data, added order As characteristic in method
-%of obfuscation is added order by these datas, the characteristic are
-%reported TABLE\ref{table:features}.
-
+We found characteristics of the protection tools through investigation
+of every products, shown in the Table \ref{table:characteristics}.
+Unfortunatelly, the characteristics of PG was not found, other
+identifying method is required.  Table \ref{table:characteristics} is
+the answer of RQ1.
 
 \begin{table}[t]
   \centering
   \footnotesize{
-    \caption{ツールごとの特徴}\label{table:features}
-  \begin{tabular}{l|l}
-    ツール              & 特徴　\\ \hline
-    ALL & オリジナルの命令列を\texttt{swap}命令で入れ替える \\
-    PG  & オリジナルと変化なし \\
-    DR  & \texttt{istore}命令を2回続けて実行する \\
-    MLI & \texttt{dup2x2 lxor}を連続して実行する \\
-    IRR & \texttt{nop}命令がある \\
+    \caption{Characteristics of the protection methods}\label{table:characteristics}
+  \begin{tabular}{l|p{6.5cm}}
+    \textbf{Tools} & \textbf{Characteristics for identifying} \\ \hline
+    ALL  & Swap two original opcodes by \texttt{swap} instruction. \\
+    PG   & Almost the same as original opcode sequence.  The proposed method cannot identify this tool. \\
+    DR   & Duplicate \texttt{istore} instruction. \\
+    MLI  & Emerge rare 2-gram \texttt{dup2x2 lxor}. \\
+    IRR  & Emerge \texttt{nop} instruction. \\
   \end{tabular}}
 \end{table}
 
+\subsection{Identifying the known protection method}\label{sect:rq2-1}
 
-\subsection{identifying method of obfuscation in known}
+In the previous experiment, we found the characteristics of each
+tools.  In this experiment, we try to identify the known protection
+method to the unknown products.
+The known protection method means that the characteristics were
+already extracted. 
 
-In this purpose, unknown product are obfuscated by using the tools in
-TABLE\ref{table:features}, after we identify how method of obfuscation
-are used.
+We chose JUnit\footnote[5]{\url{http://junit.org/}} as the unknown
+product, and known protection methods are randomly selected from Table
+\ref{table:tools} except PG.  Then, we obfuscated \texttt{
+  junit-4.12.jar} and obtain \texttt{junit-4.12-obfuscated.jar}.
+Next, we extract 5-grams from \texttt{junit-4.12-obfuscated.jar} and
+computes frequencies and perplexities of 5-grams.
 
-As a result, we analyze the RQ2-1.
+Let $P=\{ g_1, g_2, ..., g_l \}$ be a $n$-gram set extracted from
+original opcode sequence.  Also, let $P_o=\{ g^o_1, g^o_2, ..., g^o_m
+\}$ be a $n$-gram set from obfuscated opcode sequence.  Then, we
+investigated the 5-grams in the set difference $P_o \setminus P = \{ x
+\in P_o | x \not\in P \}$.  The resultant 5-grams is shown in Table
+\ref{table:junit} of top 5 frequencies.  The column named
+\textbf{Freq.} means frequencies of corresponding 5-gram.  Also, the
+column named \textbf{PPL} shows perplexities of corresponding 5-gram.
 
-Not appearing n-gram are researched by n-gram that is before applied
-obfuscation.  In the result, n-gram of high frequency in five is
-reported TABLE\ref{table:junit}.  In showing the
-TABLE\ref{table:junit}, the order are called high value in perplexity
-such as dup2X2 lxor.  As the order is characteristic, we compare it
-with characteristic in five tool ( TABLE\ref{table:junit} ).  As a
-result, characteristic in applied method of obfuscation correspond
-with characteristic in method of MLI.
+From Table \ref{table:junit}, high perplexity 5-grams are appeared
+such as including \texttt{dup2x2 lxor}.  We inspected resultant
+5-grams by the characteristics shown in Table
+\ref{table:characteristics}.  Then, we infer that the MLI was applied.
+Finally, the proposed method succeeded to identify the obfuscation
+method, since the applied obfuscation method was MLI.
+Therefore, the answer of RQ2-1 is yes.
+
+% Not appearing n-gram are researched by n-gram that is before applied
+% obfuscation.  In the result, n-gram of high frequency in five is
+% reported TABLE\ref{table:junit}.  In showing the
+% TABLE\ref{table:junit}, the order are called high value in perplexity
+% such as dup2X2 lxor.  As the order is characteristic, we compare it
+% with characteristic in five tool ( TABLE\ref{table:junit} ).  As a
+% result, characteristic in applied method of obfuscation correspond
+% with characteristic in method of MLI.
 
 \begin{table}[t]
   \centering
   \footnotesize{
-    \caption{JUnit (5-gram)の命令列}\label{table:junit}
+    \caption{5-gram of obfuscated JUnit (top 5 frequencies)}\label{table:junit}
   \begin{tabular}{l|r|r}
-    命令列 & 頻度 & PPL\\ \hline
- %   \multicolumn{1}{p{1cm}}{ORI} & 
- %   \multicolumn{1}{p{1cm}}{ALL} & 
- %   \multicolumn{1}{p{1cm}}{DR} & 
- %   \multicolumn{1}{p{1cm}}{IRR} & 
- %   \multicolumn{1}{p{1cm}}{MLI} & 
- %   \multicolumn{1}{p{1cm}}{PG} & 
- %   \multicolumn{1}{p{1cm}}{PPL} \\ \hline
-    \texttt{dup2x2 lxor lconst\_1 lneg bipush}   & 16 & 11.30E+05 \\
-    \texttt{lload dup2x2 lxor lconst\_1 lneg}    & 16 &   5.37E+05 \\
-    \texttt{bipush lushr land lxor lstore}       &  9 &   0.52E+05 \\
-    \texttt{lconst\_1 leng bipush lushr land}    &  9 &   0.96E+05 \\
-    \texttt{lneg bipush lushr land lxor}         &  9 &  1.37E+05 \\
+    \textbf{5-grams} & \textbf{Freq.} & \textbf{PPL}\\ \hline
+    \texttt{dup2x2 lxor lconst\_1 lneg bipush}   & 16 & 1.13$\times10^6$ \\
+    \texttt{lload dup2x2 lxor lconst\_1 lneg}    & 16 & 5.37$\times10^5$ \\
+    \texttt{bipush lushr land lxor lstore}       &  9 & 5.20$\times10^4$ \\
+    \texttt{lconst\_1 leng bipush lushr land}    &  9 & 9.60$\times10^4$ \\
+    \texttt{lneg bipush lushr land lxor}         &  9 & 1.37$\times10^5$ \\
   \end{tabular}}
 \end{table}
 
-\subsection{identifying method of obfuscation in unknown}
-
-In this purpose, known products are obfuscated by using the unknown
-method of obfuscation, after we identify how method of obfuscation are
-used.
-
-As a result, we analyze the RQ2-2.
-
-Not appearing n-gram are researched by n-gram that is before applied
-obfuscation.  In the result, n-gram of high frequency in five is
-reported TABLE\ref{table:jhstop}.  In showing the
-TABLE\ref{table:jhstop}, the order that is high value in perplexity
-are called dup and imul orders in continuous.  As the order is
-characteristic, we compare it with characteristic in five tool (
-TABLE\ref{table:jhstop} ).  As a result, characteristic in unknown
-method of obfuscation do not correspond with characteristic in
-analyzed method.
-
-In the next, as difference product are obfuscated unknown method of
-obfuscation, we compare the each characteristic.  As a result, as the
-same characteristic are identified, we understand that unknown method
-of product is method of SOP.
-
+\subsection{Identifying the unknown protection method}
 
 \begin{table}[t]
   \centering
   \footnotesize{
-    \caption{Jhstop (5-gram)の命令列}\label{table:jhstop}
+    \caption{5-grams of obfuscated Jhstop}\label{table:jhstop}
   \begin{tabular}{l|r|r}
-   命令列 & 頻度 & PPL\\ \hline
- %   \multicolumn{1}{p{1cm}}{ORI} & 
- %   \multicolumn{1}{p{1cm}}{ALL} & 
- %   \multicolumn{1}{p{1cm}}{DR} & 
- %   \multicolumn{1}{p{1cm}}{IRR} & 
- %   \multicolumn{1}{p{1cm}}{MLI} & 
- %   \multicolumn{1}{p{1cm}}{PG} & 
- %   \multicolumn{1}{p{1cm}}{PPL} \\ \hline  
-    \texttt{irem iconst\_0 if\_icmpne aload getfield} & 15 &   0.15E+05 \\
-    \texttt{dup dup dup imul imul}                    & 14 &  42.40E+05 \\
-    \texttt{dup dup imul imul isub}                   & 14 &   8.74E+05 \\
-    \texttt{dup imul imul isub iconst\_3}             & 14 &   3.49E+05 \\
-    \texttt{iload dup dup dup imul}                   & 14 & 101.00E+05 \\
+    \textbf{5-grams} & \textbf{Freq.} & \textbf{PPL}\\ \hline
+    \texttt{irem iconst\_0 if\_icmpne aload getfield} & 15 & 1.50$\times10^4$ \\
+    \texttt{dup dup dup imul imul}                    & 14 & 4.24$\times10^6$ \\
+    \texttt{dup dup imul imul isub}                   & 14 & 8.74$\times10^5$ \\
+    \texttt{dup imul imul isub iconst\_3}             & 14 & 3.49$\times10^5$ \\
+    \texttt{iload dup dup dup imul}                   & 14 & 1.01$\times10^7$ \\
     \end{tabular}}
 \end{table}
+
+In this experiment, we try to identify the unknown protection method.
+The unknown protection method means that we never extract the
+characteristics from it.
+
+At first, we chose
+jhstop\footnote[6]{\url{https://sourceforge.net/projects/hstop.berlios/}}
+as the target products, and SOP (simple opaque predicate) as the
+unknown protection method.  SOP is a protection algorithm implemented
+in Sandmark.  SOP algorithm inserts the opaque predicate (the
+\emph{if} statement always true or false) into the programs.
+
+We obtained $n$-grams in the same way as Section \ref{sect:rq2-1}. The
+resultant 5-grmas is shown in the Table \ref{table:jhstop}, and we
+inspect them by the characteristics shown in Table
+\ref{table:characteristics}.  From Table \ref{table:jhstop}, all of
+5-grams have high perplexities, and include multiple \texttt{dup}, and
+\texttt{imul} instructions.  The characteristics of the protection
+method is not appeard in Table \ref{table:jhstop}.  Therefore, we
+cannot identify the applied obfuscation method.
+%
+However, we can infer some protection method was applied since the
+resultant 5-grams do not appeared in original opcode sequences.
+%
+Naturally, we can identify the SOP by extracting characteristics
+similarly Section \ref{sect:rq1}.
+
+Therefore, the answer of RQ2-2 is no. However, extracting
+characteristics from many protection methods strenghthen the proposed
+method.
+
+% In this purpose, known products are obfuscated by using the unknown
+% method of obfuscation, after we identify how method of obfuscation are
+% used.
+% 
+% As a result, we analyze the RQ2-2.  
+% 
+% Not appearing n-gram are researched by n-gram that is before applied
+% obfuscation.  In the result, n-gram of high frequency in five is
+% reported TABLE\ref{table:jhstop}.  In showing the
+% TABLE\ref{table:jhstop}, the order that is high value in perplexity
+% are called dup and imul orders in continuous.  As the order is
+% characteristic, we compare it with characteristic in five tool (
+% TABLE\ref{table:jhstop} ).  As a result, characteristic in unknown
+% method of obfuscation do not correspond with characteristic in
+% analyzed method.
+% 
+% In the next, as difference product are obfuscated unknown method of
+% obfuscation, we compare the each characteristic.  As a result, as the
+% same characteristic are identified, we understand that unknown method
+% of product is method of SOP.
 
 
 \section{Conclusion}\label{sect:conclusion}
 
-In this paper, we took the identification of method of protection by
-watching the unnatural evaluation.  The actual program was applied
-method of protection and extracted characteristic to base on frequency
-and perplexity to order line of n-gram.  In this evaluation
-experiment, the identification of known obfuscation is easy and the
-identification of unknown obfuscation is difficult.  This solution
-plan is to increase the characteristic of method of obfuscation.  it
-can respond to method of unknown obfuscation by increasing
-characteristic.
+This paper proposed the method to identify the applied protection
+method by artificiality evaluation method towards de-obfuscation.  We
+developed three research questions to evaluate the proposed method.
+In the empirical studies, we examined the proposed method to answer
+the three research questions.  The answer of RQ1 was shown in the
+Table \ref{table:characteristic}, the answer of RQ2-1 is yes, and the
+answer of RQ2-2 is no.  However, the our method become useful
+gradually by extracting characteristics of many protection methods
+beforehand.
+
+In this paper, characteristics of ProGuard could not extracted.
+To support such protection tools is left to our future work.
+
+% In this paper, we took the identification of method of protection by
+% watching the unnatural evaluation.  The actual program was applied
+% method of protection and extracted characteristic to base on frequency
+% and perplexity to order line of n-gram.  In this evaluation
+% experiment, the identification of known obfuscation is easy and the
+% identification of unknown obfuscation is difficult.  This solution
+% plan is to increase the characteristic of method of obfuscation.  it
+% can respond to method of unknown obfuscation by increasing
+% characteristic.
 
 % \section*{Acknowledgment}
 
