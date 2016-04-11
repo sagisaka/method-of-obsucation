@@ -44,8 +44,8 @@
 \begin{abstract}
   Recently, to prevent cracking, the various protection methods have
   been proposed.  One of the protection methods is the obfuscation
-  method. Obfuscation method changes the program to hard to understand
-  in order to hide secret information in the program.
+  method. Obfuscation method changes the program into hard to understand
+  for hiding secret information in the program.
   %%%
   On the other hand, de-obfuscation is an interesting research topic
   for protecting the software.  Since, though vulnerable protection
@@ -59,7 +59,6 @@
   one academic tool.  Then, we analyzed the programs and extracted
   characteristics from them based on opcodes.  By using the proposed
   method, we could identify the applied obfuscation method.
-
   % Recently, illegalities are increasing with the spread of software.
   % For the measures, there are methods of protect called obfuscation.
   % The obfuscation is method to do difficulty for analyzing to
@@ -88,21 +87,21 @@
 
 \section{Introduction}\label{sect:introduction}
 
-Serious security incidents have arisen such as illegal analysis and
-software theft.  To prevent such maricious attacks, many protection
+Serious security incidents have arisen, such as illegal analysis and
+software theft.  To prevent such malicious attacks, many protection
 methods were proposed.  However, the robustness of the protection
-methods were never discussed.  Increasing the robustness needs more
+methods were never discussed.  Increasing the robustness needs a more
 deeper discussion about robustnesses and vulnerabilities.  Especially,
 systematizing how to attack to the protection methods helps evaluation
 and construction of more robust protection method.
 
-This paper focuses on de-obfuscation which converts obfuscated program
+This paper focuses on de-obfuscation which converts an obfuscated program
 to more understandable program.  If strong de-obfuscation method is
 established, fragile obfuscation methods will be gone.
 %
-We consider the process to apply de-obfuscation method.
+We consider the process to apply the de-obfuscation method.
 %
-To get the de-obfuscated program, we apply reverse transformation
+To get the de-obfuscated program, we apply the reverse transformation
 of the obfuscation algorithm.  The each obfuscation method have
 different algorithm.  That is, reverse transformation also proper for
 each obfuscation method.  Therefore, in the first step, we must
@@ -114,7 +113,7 @@ We develop three research questions to evaluate the proposed method.
 \begin{description}
 \item[RQ1]   What characteristics does the obfuscation method have?
 \item[RQ2-1] Are the characteristics useful to identify the known
-  obfuscation method applied to unknown product?
+  obfuscation method applied to an unknown product?
 \item[RQ2-2] Are the characteristics useful to identify the unknown
   obfuscation method applied to known product?
 \end{description}
@@ -179,7 +178,7 @@ category (2) includes software birthmark
 methods\cite{tamada05ieice}, and category (3) includes software
 watermark methods\cite{collberg99popl}.
 
-An attack methods against obfuscation methods were proposed for
+An attack method against obfuscation methods were proposed for
 category (1)\cite{cimato05jss}.
 %
 Cimato et al. proposed the conversion method to de-obfuscate the names
@@ -192,7 +191,7 @@ Both methods are quite important, since those methods become one of
 technique to evaluate the robustness and vulnerabilities of the
 obfuscation methods.  However, to perform de-obfuscation requires a
 suitable method for each obfuscation method.  Futhermore, the applied
-protection methods is generally private information.  Therefore,
+protection methods are generally private information.  Therefore,
 identifying applied protection methods are important to the first step
 of the de-obfuscation.
 
@@ -248,18 +247,18 @@ Straightforward algorithm is to change variable names into one
 alphabet characters.  More powerful algorithm changes variable names
 into reserved words, and invisible characters such as spaces, tabs,
 control sequences, and etc\cite{dasho}.  Other algorithms change
-methods names to introduce overloading\cite{tyma00patent}, and change
-not definition parts of symbol names but use parts with dynamic name
+method names to introduce overloading\cite{tyma00patent}, and change
+not definition parts of symbol names, but use parts with dynamic name
 resolution mechanism\cite{tamada07ieice,tamada08iasted}.
 
 Even though the obfuscation algorithms categorized into the name
-obfuscation methods, we will aquire characteristics of each algorithm
+obfuscation methods, we will acquire characteristics of each algorithm
 from the conversion process and resultant programs.
 %
 Similarly, the case of using other protection methods, characteristics
-of the method will arise.
-Threfore, we tackle to identify the applied obfuscation method towards
-de-obfuscaton by measuring the program artificiality.
+of the method will arise.  Therefore, we tackle to identify the
+applied obfuscation method towards de-obfuscation by measuring the
+program artificiality.
 
 % As Methods of protection have various methods, various methods carry
 % out the change of program.  The change is carried out the
@@ -299,7 +298,7 @@ similarities between the programs with the extracted native
 characteristics in order to detect pirated programs.
 %
 The process of the proposed method is ported from birthmark methods,
-which is to extract characteristics from the program, and to compare
+which is to extract the characteristics of the program, and to compare
 them.  However, extracting characteristics are absolutely different.
 The birthmark methods focus on the characteristics of the program.
 The proposed method focuses on the characteristics of the protection
@@ -313,7 +312,7 @@ means how {\em natural} opcode sequences are in the target program.
 Kanzaki et al. assume that a compiler generates natural opcode
 sequences.  Generally, protection methods alter the opcode sequence by
 their algorithm.  Then, the protected program may have unnatural
-opcode sequences.  If a protection method have {\em natural} opcode
+opcode sequences.  If a protection method has {\em natural} opcode
 sequences, the algorithm of the method is stealthy.
 
 We focus on the method to compute artificiality, and assume that
@@ -321,27 +320,27 @@ protected program have a certain characteristics of the protection
 algorithm.  Then, we tackle to identify the protection method of the
 program by the extracted characteristics.
 
-Figure \ref{fig:keyidea} shows key idea of the proposed method.  In
-the figure \ref{fig:keyidea}, we aquire obfuscatd program $p_1$ and
-$p_2$ from original program $p$ by certain obfuscation algorithm $f_1$
-and $f_2$ ($p_1 = f_1(p), p_2 = f_2(p)$).  Then, using characteristics
-extraction function $\mathcal{C}$, we extract cetain characteristics
-$\birth{p}$, $\birth{p_1}$, and $\birth{p_2}$ from $p$, $p_1$, and
-$p_2$.
+Figure \ref{fig:keyidea} shows the key idea of the proposed method.
+In the figure \ref{fig:keyidea}, we acquire obfuscatd program $p_1$
+and $p_2$ from original program $p$ by certain obfuscation algorithm
+$f_1$ and $f_2$ ($p_1 = f_1(p), p_2 = f_2(p)$).  Then, using
+characteristics extraction function $\mathcal{C}$, we extract certain
+characteristics $\birth{p}$, $\birth{p_1}$, and $\birth{p_2}$ from
+$p$, $p_1$, and $p_2$.
 
 The evaluation aspects of the birthmark method are resilient property
 and credibility property.  To evaluate resilient property compares
-$\birth{p}$ and $\birth{p_1}$, then high score shows that $p_1$ and
-$p$ are in the copy relation.  Also, credibility property compares
-$\birth{p}$ and $\birth{q}$, then low score shows that $p$ and $q$ are
-developed independently.
+$\birth{p}$ and $\birth{p_1}$, then the high score shows that $p_1$
+and $p$ are in the copy relation.  Also, credibility property compares
+$\birth{p}$ and $\birth{q}$, then the low score shows that $p$ and $q$
+are developed independently.
 
 The evaluation aspect of the proposed method is $\birth{p_1}$ and
-$\birth{p_2}$, and $\birth{p_1}$ and $\birth{q_1}$.  Low score between
-former relation ($\birth{p_1}$ and $\birth{p_2}$) shows different
-protection methods were applied.  Also, high score between latter
-relation ($\birth{p_1}$ and $\birth{q_1}$) shows same protection
-method was applied.
+$\birth{p_2}$, and $\birth{p_1}$ and $\birth{q_1}$.  A low score
+between former relation ($\birth{p_1}$ and $\birth{p_2}$) shows
+different protection methods were applied.  Also, high score between
+latter relation ($\birth{p_1}$ and $\birth{q_1}$) shows the same
+protection method was applied.
 
 % Base mark that is to distinguish others programs by characteristic in
 % program is proposed\cite{tamada05ieice}.  Base mark is technique that
@@ -402,15 +401,16 @@ method expects $\birth{p_1} \approx \birth{q_1}$.
 We focus on the artificiality evaluation method by Kanzaki et al. to
 the proposed method.  A certain protection method inserts ridiculous
 opcode sequence into never executed block.  Another certain protection
-method change natural opcode sequence to unnatural one.  Such unnatual
-opcode sequence might be characteristics of the protection method.
+method changes the natural opcode sequence to unnatural one.  Such
+unnatual opcode sequence might be the characteristics of the
+protection method.
 
 Originally, Kanzaki et al. computed the artificiality by probability.
-Ohtaki et al. ported Kanzaki's method for object oriented language,
+Ohtaki et al. ported Kanzaki's method for an object oriented language,
 such as Java\cite{gekka14scis}.  The method uses perplexity metric
 instead of Kanzaki's probability for computing the artificiality.  The
-perplexity metric shows complexity of the natural language.  Low
-perplexity means that next word is easy to expect.
+perplexity metric shows the complexity of the natural language.  Low
+perplexity means that the next word is easy to expect.
 
 On the other hand, a certain protection method duplicates original
 natural opcode sequence.  Such duplicated sequence is still natural.
@@ -485,31 +485,31 @@ the characteristics of the protection method.
   \end{tabular}}
 \end{table}
 
-In this study, we conducts three experiments to answer the three
+In this study, we conduct three experiments to answer the three
 research questions.
 \begin{description}
 \item[RQ1]   What characteristics does the obfuscation method have?
 \item[RQ2-1] Are the characteristics useful to identify the known
-  obfuscation method applied to unknown product?
+  obfuscation method applied to an unknown product?
 \item[RQ2-2] Are the characteristics useful to identify the unknown
   obfuscation method applied to known product?
 \end{description}
 In the first experiment, we extract $n$-grams of practical protection
 tools, and investigate the characteristics.
 %
-Second experiment try to identify the known protection algorithm.
-Third experiment is similar with second experiment, try to identy the
-unknown protection algorithm.
+The second experiment tried to identify the known protection
+algorithm.  The third experiment is similar with second experiment,
+tried to identify the unknown protection algorithm.
 
 To conduct the experiments, we chose the products shown in Table
 \ref{table:jars}.  Also, the adopted obfuscation tools are shown in
 Table \ref{table:tools}.  The first column represents tool names and
 algorithm names of Sandmark.  The column named \textbf{Abbr.} shows
 abbreviation of the tools and algorithms.  The last column shows short
-description of each tool and algorithm.
+descriptions of each tool and algorithm.
 %
 We conducted the experiments on the Java platform, because many
-obfuscation algorithm are implemented.
+obfuscation algorithms are implemented.
 
 Extracted characteristics are $n$-gram of opcodes, and computes their
 perplexities and frequencies.  The $n$ value is 2, 3, 4, and 5.
@@ -518,9 +518,9 @@ perplexities and frequencies.  The $n$ value is 2, 3, 4, and 5.
 \footnotetext[2]{\url{http://proguard.sourceforge.net}}
 \footnotetext[3]{\url{http://sandmark.cs.arizona.edu}}
 
-At first, we constructed the corpus to computes perplexity.
-Therefore, we downloaded 3,786 jar files which is distributed by the
-apache software foundation.\footnote[4]{\url{http://www.apache.org/}}.
+At first, we constructed the corpus to compute perplexity.
+Therefore, we downloaded 3,786 jar files which are distributed by the
+apache software foundation\footnote[4]{\url{http://www.apache.org/}}.
 Note that, the total number of classes is 660,465, and the total
 number of methods is 4,272,567.
 
@@ -535,7 +535,7 @@ number of methods is 4,272,567.
   \begin{minipage}[b]{0.48\linewidth}
     \includegraphics[clip,width=1.0\columnwidth]{images/ALL}%
     \subcaption{ALL}\label{fig:asm-5gram-ALL-histogram}%
-  \end{minipage}
+  \end{minipage}\vspace{0.5cm}
   \begin{minipage}[b]{0.48\linewidth}
     \includegraphics[clip,width=1.0\columnwidth]{images/DR}%
     \subcaption{DR}\label{fig:asm-5gram-DR-histogram}%
@@ -543,7 +543,7 @@ number of methods is 4,272,567.
   \begin{minipage}[b]{0.48\linewidth}
     \includegraphics[clip,width=1.0\columnwidth]{images/IRR}%
     \subcaption{IRR}\label{fig:asm-5gram-IRR-histogram}%
-  \end{minipage}
+  \end{minipage}\vspace{0.5cm}
   \begin{minipage}[b]{0.48\linewidth}
     \includegraphics[clip,width=1.0\columnwidth]{images/MLI}%
     \subcaption{MLI}\label{fig:asm-5gram-MLI-histogram}%
@@ -557,15 +557,15 @@ number of methods is 4,272,567.
 \end{figure}
 
 In this experiment, we try to characterize the protection methods.  At
-first, we obfuscate 6 products shown in Table \ref{table:jars} by 5
+first, we obfuscate 6 products shown in Table \ref{table:jars} by five
 obfuscators shown in Table \ref{table:tools}.  Next, we extract
 $n$-grams of opcode sequence from gotten 30 products and 6 original
-products.  Finally, we investigate characteristics of each tool.
+products.  Finally, we investigate the characteristics of each tool.
 
 The histogram of opcode frequencies is shown in the figure
 \ref{fig:asm-5gram-histogram}.  The horizontal axis represents each
 5-gram, and the vertical axis shows their frequencies in logarithm.
-The order of horizontal axes of all graphs are the same as original
+The order of the horizontal axis of all graphs is the same as original
 histogram.
 %
 The histogram of original and PG look the same.  From investigation
@@ -575,14 +575,14 @@ same as 5-gram from original.  The main algorithm of PG does not
 affect opcode sequences.  Therefore, the proposed method are not
 useful for such obfuscation methods, which keep opcode sequences.
 
-On the other hand, histogram of other tools are dramatically different
-from original histogram.  The results shows that the protection
-methods may affect the opcode sequences by their characteristics.
+On the other hand, histogram of other tools is dramatically different
+from original histogram.  The results show that the protection methods
+may affect the opcode sequences by their characteristics.
 
-Table \ref{table:5gram} shows 5-gram of ASM (top 5 frequencies).  In
-the Table \ref{table:5gram}, we omited PG, since just the same as
+Table \ref{table:5gram} shows 5-gram of ASM (top 5 frequencies).  On
+the Table \ref{table:5gram}, we omitted PG, since just the same as
 original 5-grams.  From the table \ref{table:5gram}, frequencies were
-decreased except MLI, and perplexities became quite high value.  The
+decreased except MLI, and perplexities became a quite high value.  The
 result shows that obfuscated opcode sequences have rare opcode
 fragments, and their fragments would be characteristics.
 
@@ -626,8 +626,8 @@ fragments, and their fragments would be characteristics.
 \end{table*}
 
 We found characteristics of the protection tools through investigation
-of every products, shown in the Table \ref{table:characteristics}.
-Unfortunatelly, the characteristics of PG was not found, other
+of every product, shown in the Table \ref{table:characteristics}.
+Unfortunately, the characteristics of PG were not found, therefore, other
 identifying method is required.  Table \ref{table:characteristics} is
 the answer of RQ1.
 
@@ -647,11 +647,10 @@ the answer of RQ1.
 
 \subsection{Identifying the known protection method}\label{sect:rq2-1}
 
-In the previous experiment, we found the characteristics of each
-tools.  In this experiment, we try to identify the known protection
-method to the unknown products.
-The known protection method means that the characteristics were
-already extracted. 
+In the previous experiment, we found the characteristics of each tool.
+In this experiment, we try to identify the known protection method to
+the unknown products.  The known protection method means that the
+characteristics were already extracted.
 
 We chose JUnit\footnote[5]{\url{http://junit.org/}} as the unknown
 product, and known protection methods are randomly selected from Table
@@ -669,13 +668,13 @@ investigated the 5-grams in the set difference $P_o \setminus P = \{ x
 \textbf{Freq.} means frequencies of corresponding 5-gram.  Also, the
 column named \textbf{PPL} shows perplexities of corresponding 5-gram.
 
-From Table \ref{table:junit}, high perplexity 5-grams are appeared
+From Table \ref{table:junit}, high perplexity 5-grams are appearing
 such as including \texttt{dup2x2 lxor}.  We inspected resultant
 5-grams by the characteristics shown in Table
 \ref{table:characteristics}.  Then, we infer that the MLI was applied.
 Finally, the proposed method succeeded to identify the obfuscation
-method, since the applied obfuscation method was MLI.
-Therefore, the answer of RQ2-1 is yes.
+method, since the applied obfuscation method was MLI.  Therefore, the
+answer of RQ2-1 is yes.
 
 % Not appearing n-gram are researched by n-gram that is before applied
 % obfuscation.  In the result, n-gram of high frequency in five is
@@ -728,22 +727,22 @@ in Sandmark.  SOP algorithm inserts the opaque predicate (the
 \emph{if} statement always true or false) into the programs.
 
 We obtained $n$-grams in the same way as Section \ref{sect:rq2-1}. The
-resultant 5-grmas is shown in the Table \ref{table:jhstop}, and we
-inspect them by the characteristics shown in Table
+resultant 5-grams are shown in the Table \ref{table:jhstop}, and we
+inspect them with the characteristics shown in Table
 \ref{table:characteristics}.  From Table \ref{table:jhstop}, all of
 5-grams have high perplexities, and include multiple \texttt{dup}, and
 \texttt{imul} instructions.  The characteristics of the protection
-method is not appeard in Table \ref{table:jhstop}.  Therefore, we
+method is not appeared in Table \ref{table:jhstop}.  Therefore, we
 cannot identify the applied obfuscation method.
 %
 However, we can infer some protection method was applied since the
-resultant 5-grams do not appeared in original opcode sequences.
+resultant 5-grams did not appear in original opcode sequences.
 %
 Naturally, we can identify the SOP by extracting characteristics
 similarly Section \ref{sect:rq1}.
 
 Therefore, the answer of RQ2-2 is no. However, extracting
-characteristics from many protection methods strenghthen the proposed
+characteristics from many protection methods strengthen the proposed
 method.
 
 % In this purpose, known products are obfuscated by using the unknown
@@ -774,13 +773,13 @@ This paper proposed the method to identify the applied protection
 method by artificiality evaluation method towards de-obfuscation.  We
 developed three research questions to evaluate the proposed method.
 In the empirical studies, we examined the proposed method to answer
-the three research questions.  The answer of RQ1 was shown in the
-Table \ref{table:characteristic}, the answer of RQ2-1 is yes, and the
-answer of RQ2-2 is no.  However, the our method become useful
+the three research questions.  The answer of RQ1 is shown in the
+Table \ref{table:characteristics}, the answer of RQ2-1 is yes, and the
+answer of RQ2-2 is no.  However, the our method becomes useful
 gradually by extracting characteristics of many protection methods
 beforehand.
 
-In this paper, characteristics of ProGuard could not extracted.
+In this paper, the characteristics of ProGuard could not extract.
 To support such protection tools is left to our future work.
 
 % In this paper, we took the identification of method of protection by
