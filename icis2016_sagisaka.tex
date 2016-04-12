@@ -728,7 +728,7 @@ answer of RQ2-1 is yes.
   \footnotesize{
     \caption{5-gram of obfuscated JUnit (top 5 frequencies)}\label{table:junit}
   \begin{tabular}{l|r|r}
-    \textbf{5-grams} & \textbf{Freq.} & \textbf{PPL}\\ \hline
+    \textbf{5-grams} & \rotatebox{90}{\textbf{Freq.}} & \multicolumn{1}{c}{\textbf{PPL}}\\ \hline
     \texttt{dup2x2 lxor lconst\_1 lneg bipush}   & 16 & 1.13$\times10^6$ \\
     \texttt{lload dup2x2 lxor lconst\_1 lneg}    & 16 & 5.37$\times10^5$ \\
     \texttt{bipush lushr land lxor lstore}       &  9 & 5.20$\times10^4$ \\
@@ -744,7 +744,7 @@ answer of RQ2-1 is yes.
   \footnotesize{
     \caption{5-grams of obfuscated ASM}\label{table:asm}
   \begin{tabular}{l|r|r}
-    \textbf{5-grams} & \textbf{Freq.} & \textbf{PPL}\\ \hline
+    \textbf{5-grams} & \rotatebox{90}{\textbf{Freq.}} & \multicolumn{1}{c}{\textbf{PPL}}\\ \hline
     \texttt{iconst\_2 irem iconst\_0 if\_icmpne aload}  & 15 & 3.76$\times10^4$ \\
     \texttt{dup dup dup imul imul}                      & 14 & 4.24$\times10^6$ \\
     \texttt{dup dup imul imul isub}                     & 14 & 8.74$\times10^5$ \\
