@@ -573,35 +573,35 @@ number of methods is 4,272,567.
   \begin{tabular}{lc|l|r|r}
     & \textbf{Rank} & \textbf{5-gram} & \textbf{Frequency} & \textbf{Perplexity} \\ \hline
 \multirow{5}{*}{{Original}}
-& 1 & \verb!<code> <code> <code> <code> aload       ! &  219 & 6.12$\times10^1$ \\
-& 2 & \verb!<code> <code> <code> aload getfield     ! &  122 & 6.59$\times10^2$ \\
-& 3 & \verb!aload getfield ifnull aload getfield    ! &   37 & 2.48$\times10^3$ \\
-& 4 & \verb!istore iload aload arraylength ifIcmpge ! &   32 & 2.31$\times10^3$ \\
-& 5 & \verb!aload ldc invokespecial goto aload      ! &   30 & 7.25$\times10^3$ \\ \hline
+& 1 & \verb!<code> <code> <code> <code> aload        ! &  219 & 6.12$\times10^1$ \\
+& 2 & \verb!<code> <code> <code> aload getfield      ! &  122 & 6.59$\times10^2$ \\
+& 3 & \verb!aload getfield ifnull aload getfield     ! &   37 & 2.48$\times10^3$ \\
+& 4 & \verb!istore iload aload arraylength if_icmpge ! &   32 & 2.31$\times10^3$ \\
+& 5 & \verb!aload ldc invokespecial goto aload       ! &   30 & 7.25$\times10^3$ \\ \hline
 \multirow{5}{*}{{ALL}}
-& 1 & \verb!aload dup getfield swap getfield              ! &  39 & 3.19$\times10^5$ \\
+& 1 & \verb!aload dup getfield swap getfield               ! &  39 & 3.19$\times10^5$ \\
 & 2 & \verb!aload getfield ldc invokestatic invokevirtual ! &  32 & 5.95$\times10^3$ \\
 & 3 & \verb!ldc invokestatic aload invokevirtual ifeq     ! &  32 & 2.29$\times10^3$ \\
 & 4 & \verb!goto ldc invokestatic aload invokevirtual     ! &  26 & 8.65$\times10^3$ \\
-& 5 & \verb!dup istore iload ifIcmpge aload               ! &  25 & 1.02$\times10^4$ \\ \hline
+& 5 & \verb!dup istore iload if_icmpge aload              ! &  25 & 1.02$\times10^4$ \\ \hline
 \multirow{5}{*}{{DR}}
-& 1 & \verb!iconst\_0 dup istore istore iload       ! & 30 & 1.08$\times10^4$ \\
-& 2 & \verb!dup istore istore iload aload           ! & 27 & 3.08$\times10^4$ \\
-& 3 & \verb!istore istore iload aload arraylength   ! & 20 & 8.31$\times10^4$ \\
-& 4 & \verb!invokevirtual pop iconst\_0 dup istore  ! & 17 & 2.27$\times10^4$ \\
-& 5 & \verb!pop iconst\_0 dup istore istore         ! & 17 & 1.41$\times10^4$ \\ \hline
+& 1 & \verb!iconst_0 dup istore istore iload       ! & 30 & 1.08$\times10^4$ \\
+& 2 & \verb!dup istore istore iload aload          ! & 27 & 3.08$\times10^4$ \\
+& 3 & \verb!istore istore iload aload arraylength  ! & 20 & 8.31$\times10^4$ \\
+& 4 & \verb!invokevirtual pop iconst_0 dup istore  ! & 17 & 2.27$\times10^4$ \\
+& 5 & \verb!pop iconst_0 dup istore istore         ! & 17 & 1.41$\times10^4$ \\ \hline
 \multirow{5}{*}{{MLI}}
-& 1 & \verb!dup2X2 lxor lconst\_1 lneg bipush ! & 291 & 1.13$\times10^6$ \\
-& 2 & \verb!lload dup2X2 lxor lconst\_1 lneg  ! & 291 & 5.37$\times10^5$ \\
-& 3 & \verb!aload lload bipush lshr l2i       ! & 253 & 5.14$\times10^3$ \\
-& 4 & \verb!bipush lushr land lxor lstore     ! & 187 & 5.21$\times10^4$ \\
-& 5 & \verb!lconst\_1 lneg bipush lushr land  ! & 187 & 9.63$\times10^4$ \\ \hline
+& 1 & \verb!dup2X2 lxor lconst_1 lneg bipush ! & 291 & 1.13$\times10^6$ \\
+& 2 & \verb!lload dup2X2 lxor lconst_1 lneg  ! & 291 & 5.37$\times10^5$ \\
+& 3 & \verb!aload lload bipush lshr l2i      ! & 253 & 5.14$\times10^3$ \\
+& 4 & \verb!bipush lushr land lxor lstore    ! & 187 & 5.21$\times10^4$ \\
+& 5 & \verb!lconst_1 lneg bipush lushr land  ! & 187 & 9.63$\times10^4$ \\ \hline
 \multirow{5}{*}{{IRR}}
-& 1 & \verb!i2l iconst\_0 i2l lcmp iconst\_1  ! & 71 & 1.08$\times10^4$ \\
-& 2 & \verb!i2l lcmp iconst\_1 ixor iconst\_1 ! & 71 & 3.08$\times10^4$ \\
-& 3 & \verb!iconst\_0 i2l lcmp iconst\_1 ixor ! & 71 & 8.31$\times10^4$ \\
-& 4 & \verb!iconst\_1 ixor iconst\_1 iand nop ! & 71 & 1.31$\times10^3$ \\
-& 5 & \verb!iconst\_2 irem istore iload i2l   ! & 71 & 1.47$\times10^4$ \\
+& 1 & \verb!i2l iconst_0 i2l lcmp iconst_1  ! & 71 & 1.08$\times10^4$ \\
+& 2 & \verb!i2l lcmp iconst_1 ixor iconst_1 ! & 71 & 3.08$\times10^4$ \\
+& 3 & \verb!iconst_0 i2l lcmp iconst_1 ixor ! & 71 & 8.31$\times10^4$ \\
+& 4 & \verb!iconst_1 ixor iconst_1 iand nop ! & 71 & 1.31$\times10^3$ \\
+& 5 & \verb!iconst_2 irem istore iload i2l  ! & 71 & 1.47$\times10^4$ \\
   \end{tabular}}
 \end{table*}
 
@@ -745,11 +745,11 @@ answer of RQ2-1 is yes.
     \caption{5-grams of obfuscated ASM}\label{table:asm}
   \begin{tabular}{l|r|r}
     \textbf{5-grams} & \textbf{Freq.} & \textbf{PPL}\\ \hline
-    \texttt{iconst\_2 irem iconst\_0 ifIcmpne aload}  & 15 & 3.76$\times10^4$ \\
-    \texttt{dup dup dup imul imul}                    & 14 & 4.24$\times10^6$ \\
-    \texttt{dup dup imul imul isub}                   & 14 & 8.74$\times10^5$ \\
-    \texttt{dup imul imul isub iconst\_3}             & 14 & 3.49$\times10^5$ \\
-    \texttt{iload dup dup dup imul}                   & 14 & 1.01$\times10^7$ \\
+    \texttt{iconst\_2 irem iconst\_0 if\_icmpne aload}  & 15 & 3.76$\times10^4$ \\
+    \texttt{dup dup dup imul imul}                      & 14 & 4.24$\times10^6$ \\
+    \texttt{dup dup imul imul isub}                     & 14 & 8.74$\times10^5$ \\
+    \texttt{dup imul imul isub iconst\_3}               & 14 & 3.49$\times10^5$ \\
+    \texttt{iload dup dup dup imul}                     & 14 & 1.01$\times10^7$ \\
     \end{tabular}}
 \end{table}
 
@@ -813,7 +813,7 @@ Naturally, we were able to identify the SOP by extracting
 characteristics beforehand in the same way as Section \ref{sect:rq1}.
 
 Therefore, the answer of RQ2-2 is no. However, extracting
-characteristics from many protection methods strengthen the proposed
+characteristics from many protection methods strengthens the proposed
 method.
 
 % In this purpose, known products are obfuscated by using the unknown
