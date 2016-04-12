@@ -12,6 +12,8 @@
 \usepackage{subcaption}
 \captionsetup{compatibility=false}
 
+\newlength{\graphwidth}
+
 \newcommand{\birth}[1]{\mathcal{C}(#1)}
 \newcommand{\distinct}[1]{\mathcal{N}_n^d(#1)}
 \newcommand{\distinctnnn}[1]{\mathcal{N}_3^d(#1)}
@@ -28,14 +30,13 @@
 % affiliations
 \author{\IEEEauthorblockN{Hayato Sagisaka}
   \IEEEauthorblockA{Division of Frontier Informatics,\\
-    Graduate School of Kyoto Sangyo University.\\
-    Email: i1658065@cc.kyoto-su.ac.jp}
+    Graduate School of Kyoto Sangyo University.}
 \and
 \IEEEauthorblockN{Haruaki Tamada}
 \IEEEauthorblockA{
   Faculty of Computer Science and Engineering,\\
-  Kyoto Sangyo University\\
-  Email: tamada@cc.kyoto-su.ac.jp}}
+  Kyoto Sangyo University.}
+}
 
 \maketitle
 
@@ -44,8 +45,8 @@
 \begin{abstract}
   Recently, to prevent cracking, the various protection methods have
   been proposed.  One of the protection methods is the obfuscation
-  method. Obfuscation method changes the program into hard to understand
-  for hiding secret information in the program.
+  method. Obfuscation method changes the program into hard to
+  understand for hiding secret information in the program.
   %%%
   On the other hand, de-obfuscation is an interesting research topic
   for protecting the software.  Since, though vulnerable protection
@@ -175,8 +176,8 @@ the theft\cite{collberg09surreptitious}.
 In category (1), there were proposed obfuscation methods, and
 anti-assemble methods\cite{tyma00patent,monden97ieice}.  Also,
 category (2) includes software birthmark
-methods\cite{tamada05ieice}, and category (3) includes software
-watermark methods\cite{collberg99popl}.
+methods\cite{tamada04iasted,tamada05ieice}, and category (3) includes
+software watermark methods\cite{collberg99popl}.
 
 An attack method against obfuscation methods were proposed for
 category (1)\cite{cimato05jss}.
@@ -293,9 +294,9 @@ program artificiality.
 \end{figure}
 
 The birthmark methods have been proposed, which use characteristics of
-the program\cite{tamada05ieice}.  Birthmark method originally computes
-similarities between the programs with the extracted native
-characteristics in order to detect pirated programs.
+the program\cite{tamada04iasted,tamada05ieice}.  Birthmark method
+originally computes similarities between the programs with the
+extracted native characteristics in order to detect pirated programs.
 %
 The process of the proposed method is ported from birthmark methods,
 which is to extract the characteristics of the program, and to compare
@@ -462,6 +463,45 @@ the characteristics of the protection method.
 
 \subsection{Overview}\label{sect:study_overview}
 
+\begin{figure*}[bt]
+  \centering
+  \setlength{\graphwidth}{0.32\textwidth}
+  \begin{minipage}[b]{\graphwidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/ORI_ASM}%
+    \subcaption{Original ASM}
+    \label{fig:asm-5gram-original-histogram}%
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{\graphwidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/ALL_ASM}%
+    \subcaption{ALL (Allatori Java Obfuscator)}\label{fig:asm-5gram-ALL-histogram}%
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{\graphwidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/PG_ASM}%
+    \subcaption{PG (ProGuard)}\label{fig:asm-5gram-PG-histogram}%
+  \end{minipage}
+  \vspace{0.5cm}
+  \begin{minipage}[b]{\graphwidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/DR_ASM}%
+    \subcaption{DR (Duplication Registers)}
+    \label{fig:asm-5gram-DR-histogram}%
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{\graphwidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/IRR_ASM}%
+    \subcaption{IRR (Irreducibility)}\label{fig:asm-5gram-IRR-histogram}%
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{\graphwidth}
+    \includegraphics[clip,width=1.0\columnwidth]{images/MLI_ASM}%
+    \subcaption{MLI (Merge local integers)}
+    \label{fig:asm-5gram-MLI-histogram}%
+  \end{minipage}
+  \caption{Histogram of ASM opcdoe in 5-gram (Sorted by original 5-gram frequencies)}
+  \label{fig:asm-5gram-histogram}
+\end{figure*}
+
 \begin{table}[t]
   \centering
   \footnotesize{
@@ -526,68 +566,44 @@ number of methods is 4,272,567.
 
 \subsection{Analysis of $n$-gram}\label{sect:rq1}
 
-\begin{figure}[bt]
+\begin{table*}[t]
   \centering
-  \begin{minipage}[b]{0.48\linewidth}
-    \includegraphics[clip,width=1.0\columnwidth]{images/ORI_ASM}%
-    \subcaption{Original}\label{fig:asm-5gram-original-histogram}%
-  \end{minipage}
-  \begin{minipage}[b]{0.48\linewidth}
-    \includegraphics[clip,width=1.0\columnwidth]{images/ALL_ASM}%
-    \subcaption{ALL}\label{fig:asm-5gram-ALL-histogram}%
-  \end{minipage}\vspace{0.5cm}
-  \begin{minipage}[b]{0.48\linewidth}
-    \includegraphics[clip,width=1.0\columnwidth]{images/DR_ASM}%
-    \subcaption{DR}\label{fig:asm-5gram-DR-histogram}%
-  \end{minipage}
-  \begin{minipage}[b]{0.48\linewidth}
-    \includegraphics[clip,width=1.0\columnwidth]{images/IRR_ASM}%
-    \subcaption{IRR}\label{fig:asm-5gram-IRR-histogram}%
-  \end{minipage}\vspace{0.5cm}
-  \begin{minipage}[b]{0.48\linewidth}
-    \includegraphics[clip,width=1.0\columnwidth]{images/MLI_ASM}%
-    \subcaption{MLI}\label{fig:asm-5gram-MLI-histogram}%
-  \end{minipage}
-  \begin{minipage}[b]{0.48\linewidth}
-    \includegraphics[clip,width=1.0\columnwidth]{images/PG_ASM}%
-    \subcaption{PG}\label{fig:asm-5gram-PG-histogram}%
-  \end{minipage}
-  \caption{Histogram of ASM opcdoe in 5-gram (Sorted by original 5-gram frequencies)}
-  \label{fig:asm-5gram-histogram}
-\end{figure}
-
-
-
-
-%\begin{figure}[bt]
-%  \centering
-%  \begin{minipage}[b]{0.48\linewidth}
-%    \includegraphics[clip,width=1.0\columnwidth]{images/ORI}%
-%    \subcaption{Original}\label{fig:asm-5gram-original-histogram}%
-%  \end{minipage}
-%  \begin{minipage}[b]{0.48\linewidth}
-%    \includegraphics[clip,width=1.0\columnwidth]{images/ALL}%
-%    \subcaption{ALL}\label{fig:asm-5gram-ALL-histogram}%
-%  \end{minipage}\vspace{0.5cm}
-%  \begin{minipage}[b]{0.48\linewidth}
-%    \includegraphics[clip,width=1.0\columnwidth]{images/DR}%
-%    \subcaption{DR}\label{fig:asm-5gram-DR-histogram}%
-%  \end{minipage}
-%  \begin{minipage}[b]{0.48\linewidth}
-%    \includegraphics[clip,width=1.0\columnwidth]{images/IRR}%
-%    \subcaption{IRR}\label{fig:asm-5gram-IRR-histogram}%
-%  \end{minipage}\vspace{0.5cm}
-%  \begin{minipage}[b]{0.48\linewidth}
-%    \includegraphics[clip,width=1.0\columnwidth]{images/MLI}%
-%    \subcaption{MLI}\label{fig:asm-5gram-MLI-histogram}%
-%  \end{minipage}
-%  \begin{minipage}[b]{0.48\linewidth}
-%    \includegraphics[clip,width=1.0\columnwidth]{images/PG}%
-%    \subcaption{PG}\label{fig:asm-5gram-PG-histogram}%
-%  \end{minipage}
-%  \caption{Histogram of ASM opcdoe in 5-gram (Sorted by original 5-gram frequencies)}
-%  \label{fig:asm-5gram-histogram}
-%\end{figure}
+  \caption{ASM opcodes in 5-gram before/after obfuscation (top 5 frequencies)}\label{table:5gram}
+  {\footnotesize
+  \begin{tabular}{lc|l|r|r}
+    & \textbf{Rank} & \textbf{5-gram} & \textbf{Frequency} & \textbf{Perplexity} \\ \hline
+\multirow{5}{*}{{Original}}
+& 1 & \verb!<code> <code> <code> <code> aload       ! &  219 & 6.12$\times10^1$ \\
+& 2 & \verb!<code> <code> <code> aload getfield     ! &  122 & 6.59$\times10^2$ \\
+& 3 & \verb!aload getfield ifnull aload getfield    ! &   37 & 2.48$\times10^3$ \\
+& 4 & \verb!istore iload aload arraylength ifIcmpge ! &   32 & 2.31$\times10^3$ \\
+& 5 & \verb!aload ldc invokespecial goto aload      ! &   30 & 7.25$\times10^3$ \\ \hline
+\multirow{5}{*}{{ALL}}
+& 1 & \verb!aload dup getfield swap getfield              ! &  39 & 3.19$\times10^5$ \\
+& 2 & \verb!aload getfield ldc invokestatic invokevirtual ! &  32 & 5.95$\times10^3$ \\
+& 3 & \verb!ldc invokestatic aload invokevirtual ifeq     ! &  32 & 2.29$\times10^3$ \\
+& 4 & \verb!goto ldc invokestatic aload invokevirtual     ! &  26 & 8.65$\times10^3$ \\
+& 5 & \verb!dup istore iload ifIcmpge aload               ! &  25 & 1.02$\times10^4$ \\ \hline
+\multirow{5}{*}{{DR}}
+& 1 & \verb!iconst\_0 dup istore istore iload       ! & 30 & 1.08$\times10^4$ \\
+& 2 & \verb!dup istore istore iload aload           ! & 27 & 3.08$\times10^4$ \\
+& 3 & \verb!istore istore iload aload arraylength   ! & 20 & 8.31$\times10^4$ \\
+& 4 & \verb!invokevirtual pop iconst\_0 dup istore  ! & 17 & 2.27$\times10^4$ \\
+& 5 & \verb!pop iconst\_0 dup istore istore         ! & 17 & 1.41$\times10^4$ \\ \hline
+\multirow{5}{*}{{MLI}}
+& 1 & \verb!dup2X2 lxor lconst\_1 lneg bipush ! & 291 & 1.13$\times10^6$ \\
+& 2 & \verb!lload dup2X2 lxor lconst\_1 lneg  ! & 291 & 5.37$\times10^5$ \\
+& 3 & \verb!aload lload bipush lshr l2i       ! & 253 & 5.14$\times10^3$ \\
+& 4 & \verb!bipush lushr land lxor lstore     ! & 187 & 5.21$\times10^4$ \\
+& 5 & \verb!lconst\_1 lneg bipush lushr land  ! & 187 & 9.63$\times10^4$ \\ \hline
+\multirow{5}{*}{{IRR}}
+& 1 & \verb!i2l iconst\_0 i2l lcmp iconst\_1  ! & 71 & 1.08$\times10^4$ \\
+& 2 & \verb!i2l lcmp iconst\_1 ixor iconst\_1 ! & 71 & 3.08$\times10^4$ \\
+& 3 & \verb!iconst\_0 i2l lcmp iconst\_1 ixor ! & 71 & 8.31$\times10^4$ \\
+& 4 & \verb!iconst\_1 ixor iconst\_1 iand nop ! & 71 & 1.31$\times10^3$ \\
+& 5 & \verb!iconst\_2 irem istore iload i2l   ! & 71 & 1.47$\times10^4$ \\
+  \end{tabular}}
+\end{table*}
 
 In this experiment, we try to characterize the protection methods.  At
 first, we obfuscate 6 products shown in Table \ref{table:jars} by five
@@ -619,45 +635,6 @@ decreased except MLI, and perplexities became a quite high value.  The
 result shows that obfuscated opcode sequences have rare opcode
 fragments, and their fragments would be characteristics.
 
-\begin{table*}[t]
-  \centering
-  \caption{ASM opcodes in 5-gram before/after obfuscation (top 5 frequencies)}\label{table:5gram}
-  {\footnotesize
-  \begin{tabular}{lc|l|r|r}
-    & \textbf{Rank} & \textbf{5-gram} & \textbf{Frequency} & \textbf{Perplexity} \\ \hline
-\multirow{5}{*}{{Original}}
-& 1 & \verb!<code> <code> <code> <code> aload       ! &  219 & 6.12$\times10^1$ \\
-& 2 & \verb!<code> <code> <code> aload getfield     ! &  122 & 6.59$\times10^2$ \\
-& 3 & \verb!aload getfield ifnull aload getfield    ! &   37 & 2.48$\times10^3$ \\
-& 4 & \verb!istore iload aload arraylength ifIcmpge ! &   32 & 2.31$\times10^3$ \\
-& 5 & \verb!aload ldc invokespecial goto aload      ! &   30 & 7.25$\times10^3$ \\ \hline
-\multirow{5}{*}{{ALL}}
-& 1 & \verb!aload dup getfield swap getfield              ! &  39 & 3.19$\times10^5$ \\
-& 2 & \verb!aload getfield ldc invokestatic invokevirtual ! &  32 & 5.95$\times10^3$ \\
-& 3 & \verb!ldc invokestatic aload invokevirtual ifeq     ! &  32 & 2.29$\times10^3$ \\
-& 4 & \verb!goto ldc invokestatic aload invokevirtual     ! &  26 & 8.65$\times10^3$ \\
-& 5 & \verb!dup istore iload ifIcmpge aload               ! &  25 & 1.02$\times10^4$ \\ \hline
-\multirow{5}{*}{{DR}}
-& 1 & \verb!iconst\_0 dup istore istore iload       ! & 30 & 1.08$\times10^4$ \\
-& 2 & \verb!dup istore istore iload aload         ! & 27 & 3.08$\times10^4$ \\
-& 3 & \verb!istore istore iload aload arraylength ! & 20 & 8.31$\times10^4$ \\
-& 4 & \verb!invokevirtual pop iconst\_0 dup istore  ! & 17 & 2.27$\times10^4$ \\
-& 5 & \verb!pop iconst0 dup istore istore         ! & 17 & 1.41$\times10^4$ \\ \hline
-\multirow{5}{*}{{MLI}}
-& 1 & \verb!dup2X2 lxor lconst\_1 lneg bipush ! & 291 & 1.13$\times10^6$ \\
-& 2 & \verb!lload dup2X2 lxor lconst\_1 lneg  ! & 291 & 5.37$\times10^5$ \\
-& 3 & \verb!aload lload bipush lshr l2i     ! & 253 & 5.14$\times10^3$ \\
-& 4 & \verb!bipush lushr land lxor lstore   ! & 187 & 5.21$\times10^4$ \\
-& 5 & \verb!lconst\_1 lneg bipush lushr land  ! & 187 & 9.63$\times10^4$ \\ \hline
-\multirow{5}{*}{{IRR}}
-& 1 & \verb!i2l iconst0 i2l lcmp iconst1  ! & 71 & 1.08$\times10^4$ \\
-& 2 & \verb!i2l lcmp iconst1 ixor iconst1 ! & 71 & 3.08$\times10^4$ \\
-& 3 & \verb!iconst0 i2l lcmp iconst1 ixor ! & 71 & 8.31$\times10^4$ \\
-& 4 & \verb!iconst1 ixor iconst1 iand nop ! & 71 & 1.31$\times10^3$ \\
-& 5 & \verb!iconst2 irem istore iload i2l ! & 71 & 1.47$\times10^4$ \\
-  \end{tabular}}
-\end{table*}
-
 We found characteristics of the protection tools through investigation
 of every product, shown in the Table \ref{table:characteristics}.
 Unfortunately, the characteristics of PG were not found, therefore, other
@@ -680,26 +657,54 @@ the answer of RQ1.
 
 \subsection{Identifying the known protection method}\label{sect:rq2-1}
 
+\begin{figure}[bt]
+  \centering
+  \includegraphics[width=0.32\textwidth]{images/ORI_junit}%
+  \subcaption{Histogram of 5-grams from original product}\label{fig:junit-5gram-original-histogram}%
+  \includegraphics[width=0.32\textwidth]{images/MLI_junit}%
+  \subcaption{Histogram of 5-grams from obfuscated product}\label{fig:junit-5gram-MLI-histogram}%
+  \caption{Histogram of junit opcdoe in 5-gram (Sorted by original 5-gram frequencies)}
+  \label{fig:junit-5gram-histogram}
+\end{figure}
+  
 In the previous experiment, we found the characteristics of each tool.
 In this experiment, we try to identify the known protection method to
 the unknown products.  The known protection method means that the
 characteristics were already extracted.
 
-We chose JUnit\footnote[5]{\url{http://junit.org/}} as the unknown
+We chose JUnit 3.7\footnote[5]{\url{http://junit.org/}} as the unknown
 product, and known protection methods are randomly selected from Table
 \ref{table:tools} except PG.  Then, we obfuscated \texttt{
-  junit-4.12.jar} and obtain \texttt{junit-4.12-obfuscated.jar}.
-Next, we extract 5-grams from \texttt{junit-4.12-obfuscated.jar} and
+  junit-3.7.jar} and obtain \texttt{junit-3.7-obfuscated.jar}.
+Next, we extract 5-grams from \texttt{junit-3.7-obfuscated.jar} and
 computes frequencies and perplexities of 5-grams.
 
+Figure \ref{fig:junit-5gram-original-histogram} shows histograms of
+5-grams extracted from \texttt{junit-3.7.jar} and
+\texttt{junit-3.7-obfuscated.jar}.  At this time, the obfuscation
+algorithm was unknown, however, we suppose that some obfuscation
+algorithms were applied from the graphs.  Then, we compare to the
+graph of figure \ref{fig:junit-5gram-MLI-histogram} and graphs in
+figure \ref{fig:asm-5gram-histogram}.  The figure
+\ref{fig:junit-5gram-MLI-histogram} seems to be similar with DR
+(Figure \ref{fig:asm-5gram-DR-histogram}) and MLI (Figure
+\ref{fig:asm-5gram-MLI-histogram}) from the shapes of the graphs.
+However, we did not succeed identifying the obfuscation method yet,
+since the graph shapes are not matched exactly.
+
+Then, we inspect the details of opcode sequences based on
+characteristics of protection methods shown in Table
+\ref{table:characteristics}.  Before inspection, we filtered target
+5-grams as follows:
+%
 Let $P=\{ g_1, g_2, ..., g_l \}$ be a $n$-gram set extracted from
 original opcode sequence.  Also, let $P_o=\{ g^o_1, g^o_2, ..., g^o_m
 \}$ be a $n$-gram set from obfuscated opcode sequence.  Then, we
-investigated the 5-grams in the set difference $P_o \setminus P = \{ x
-\in P_o | x \not\in P \}$.  The resultant 5-grams is shown in Table
-\ref{table:junit} of top 5 frequencies.  The column named
-\textbf{Freq.} means frequencies of corresponding 5-gram.  Also, the
-column named \textbf{PPL} shows perplexities of corresponding 5-gram.
+filter the 5-grams in the set difference $P_o \setminus P = \{ x
+\in P_o | x \not\in P \}$.  The resultant 5-grams of top 5 frequences
+are shown in Table \ref{table:junit}.  The column named \textbf{Freq.}
+means frequencies of corresponding 5-gram.  Also, the column named
+\textbf{PPL} shows perplexities of corresponding 5-gram.
 
 From Table \ref{table:junit}, high perplexity 5-grams are appearing
 such as including \texttt{dup2x2 lxor}.  We inspected resultant
@@ -732,24 +737,6 @@ answer of RQ2-1 is yes.
   \end{tabular}}
 \end{table}
 
-%%%%
-
-\begin{figure}[bt]
-  \centering
-  \begin{minipage}[b]{0.48\linewidth}
-    \includegraphics[clip,width=1.0\columnwidth]{images/ORI_junit}%
-    \subcaption{Original}\label{fig:junit-5gram-original-histogram}%
-  \end{minipage}
-  \begin{minipage}[b]{0.48\linewidth}
-    \includegraphics[clip,width=1.0\columnwidth]{images/MLI_junit}%
-    \subcaption{MLI}\label{fig:junit-5gram-ALL-histogram}%
-  \end{minipage}\vspace{0.5cm}
-  \caption{Histogram of junit opcdoe in 5-gram (Sorted by original 5-gram frequencies)}
-  \label{fig:junit-5gram-histogram}
-\end{figure}
-  
-%%%%%
-
 \subsection{Identifying the unknown protection method}
 
 \begin{table}[t]
@@ -770,8 +757,9 @@ answer of RQ2-1 is yes.
 
 \begin{figure}[b]
   \centering
-  \includegraphics[width=0.49\textwidth]{images/SOP_ASM}
-  \caption{5-gram of obfuscated ASM}\label{fig:SOP}
+  \includegraphics[clip,width=0.32\textwidth]{images/SOP_ASM}
+  \caption{5-gram of obfuscated ASM with unknown algorithm}
+  \label{fig:SOP}
 \end{figure}
 
 %%%%%%
@@ -794,27 +782,35 @@ In this experiment, we try to identify the unknown protection method.
 The unknown protection method means that we never extract the
 characteristics from it.
 
-At first, we chose
-jhstop\footnote[6]{\url{https://sourceforge.net/projects/hstop.berlios/}}
-as the target products, and SOP (simple opaque predicate) as the
-unknown protection method.  SOP is a protection algorithm implemented
-in Sandmark.  SOP algorithm inserts the opaque predicate (the
-\emph{if} statement always true or false) into the programs.
+At first, we chose ASM 3.3.1 as the target products, and SOP (simple
+opaque predicate) as the unknown protection method.  SOP is a
+protection algorithm implemented in Sandmark.  SOP algorithm inserts
+the opaque predicate (the \emph{if} statement always true or false)
+into the programs.
 
-We obtained $n$-grams in the same way as Section \ref{sect:rq2-1}. The
-resultant 5-grams are shown in the Table \ref{table:jhstop}, and we
-inspect them with the characteristics shown in Table
-\ref{table:characteristics}.  From Table \ref{table:jhstop}, all of
+At first, we obfuscated \texttt{asm-3.3.1.jar} and got
+\texttt{asm-3.3.1-obfuscated.jar}.
+%
+Next, we obtained $n$-grams from both jar files in the same way as
+Section \ref{sect:rq2-1}.  The histogram of 5-grams is shown in Figure
+\ref{fig:SOP}.  The graph of figure \ref{fig:SOP} is similar with
+graph of figure \ref{fig:asm-5gram-DR-histogram}.  However, the graphs
+are not matched.  Therefore, we inspect the 5-grams from
+\texttt{asm-3.3.1-obfuscated.jar}.
+
+The resultant 5-grams of top 5 friequencies are shown in the Table
+\ref{table:asm}, and we inspect them with the characteristics shown in
+Table \ref{table:characteristics}.  From Table \ref{table:asm}, all of
 5-grams have high perplexities, and include multiple \texttt{dup}, and
 \texttt{imul} instructions.  The characteristics of the protection
-method is not appeared in Table \ref{table:jhstop}.  Therefore, we
-cannot identify the applied obfuscation method.
+method is not appeared in Table \ref{table:asm}.  Therefore, we cannot
+identify the applied obfuscation method.
 %
 However, we can infer some protection method was applied since the
 resultant 5-grams did not appear in original opcode sequences.
 %
-Naturally, we can identify the SOP by extracting characteristics
-similarly Section \ref{sect:rq1}.
+Naturally, we were able to identify the SOP by extracting
+characteristics beforehand in the same way as Section \ref{sect:rq1}.
 
 Therefore, the answer of RQ2-2 is no. However, extracting
 characteristics from many protection methods strengthen the proposed
@@ -854,8 +850,10 @@ answer of RQ2-2 is no.  However, the our method becomes useful
 gradually by extracting characteristics of many protection methods
 beforehand.
 
-In this paper, the characteristics of ProGuard could not extract.
-To support such protection tools is left to our future work.
+In this paper, the characteristics of ProGuard could not extract.  To
+support such protection tools is left to our future work.  It is also
+interesting research topic to identify the obfuscation method
+automatically.
 
 % In this paper, we took the identification of method of protection by
 % watching the unnatural evaluation.  The actual program was applied
