@@ -253,7 +253,7 @@ not definition parts of symbol names, but use parts with dynamic name
 resolution mechanism\cite{tamada07ieice,tamada08iasted}.
 
 Even though the obfuscation algorithms categorized into the name
-obfuscation methods, we will acquire characteristics of each algorithm
+obfuscation methods, we will extract characteristics of each algorithm
 from the conversion process and resultant programs.
 %
 Similarly, the case of using other protection methods, characteristics
@@ -322,7 +322,7 @@ algorithm.  Then, we tackle to identify the protection method of the
 program by the extracted characteristics.
 
 Figure \ref{fig:keyidea} shows the key idea of the proposed method.
-In the figure \ref{fig:keyidea}, we acquire obfuscatd program $p_1$
+In the figure \ref{fig:keyidea}, we obtain obfuscatd program $p_1$
 and $p_2$ from original program $p$ by certain obfuscation algorithm
 $f_1$ and $f_2$ ($p_1 = f_1(p), p_2 = f_2(p)$).  Then, using
 characteristics extraction function $\mathcal{C}$, we extract certain
@@ -788,10 +788,10 @@ protection algorithm implemented in Sandmark.  SOP algorithm inserts
 the opaque predicate (the \emph{if} statement always true or false)
 into the programs.
 
-At first, we obfuscated \texttt{asm-3.3.1.jar} and got
+At first, we obfuscated \texttt{asm-3.3.1.jar} and obtained
 \texttt{asm-3.3.1-obfuscated.jar}.
 %
-Next, we obtained $n$-grams from both jar files in the same way as
+Next, we extracted $n$-grams from both jar files in the same way as
 Section \ref{sect:rq2-1}.  The histogram of 5-grams is shown in Figure
 \ref{fig:SOP}.  The graph of figure \ref{fig:SOP} is similar with
 graph of figure \ref{fig:asm-5gram-DR-histogram}.  However, the graphs
