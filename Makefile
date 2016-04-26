@@ -14,6 +14,9 @@ $(TARGET).bbl: $(TARGET).bib
 $(TARGET).aux: $(TARGET).tex
 	platex $(TARGET).tex
 
+touch: 
+	touch $(TARGET).bib $(TARGET).tex
+
 open: $(TARGET).pdf
 	open $(TARGET).pdf
 
